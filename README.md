@@ -15,4 +15,29 @@ $ docker build -t genapp .
 
 $ docker run -d -p 8080:8080 genapp
 ```
+
+
+# Project structure
+```
+.
+├── config
+│   ├── config.go
+│   └── env_names.go
+├── crypto
+│   └── crypto.go
+├── Dockerfile
+├── emails
+│   ├── email_data.go
+│   └── email_processing.go
+├── errors
+│   └── errors.go
+├── go.mod
+├── go.sum
+├── main.go
+├── platform
+│   └── subscribed_emails.txt
+├── README.md
+└── routes
+    └── routes.go
+    
 Good reviewing!
