@@ -1,10 +1,18 @@
 package config
 
 import (
+	"log"
 	"testing"
+
+	"github.com/joho/godotenv"
 )
 
 func TestIsConfigPresent(t *testing.T) {
+	err := godotenv.Load("./../.env")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	cfg := Get()
 
 	if cfg.ServerURL == "" {

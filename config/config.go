@@ -4,8 +4,6 @@ import (
 	"os"
 	"strconv"
 	"sync"
-
-	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -28,7 +26,6 @@ var (
 func Get() *Config {
 
 	once.Do(func() {
-		godotenv.Load(".env")
 		cfg = Config{
 			ServerURL:          os.Getenv(ServerUrl),
 			CryptoApiFormatUrl: os.Getenv(CryptoApiFormatUrl),
