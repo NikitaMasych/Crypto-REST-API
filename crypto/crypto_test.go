@@ -8,7 +8,7 @@ import (
 )
 
 func TestIsCryptoRateValid(t *testing.T) {
-	err := godotenv.Load("./../.env")
+	err := godotenv.Load("./../.env") // from upper directory
 	if err != nil {
 		log.Fatal(err)
 	}
