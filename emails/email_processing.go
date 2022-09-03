@@ -15,7 +15,7 @@ import (
 func SendEmails() {
 	cfg := config.Get()
 	path := cfg.StorageFile
-	file, err := os.OpenFile(path, os.O_RDWR, 0644)
+	file, err := os.OpenFile(path, os.O_RDONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
