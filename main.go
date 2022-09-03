@@ -6,11 +6,9 @@ import (
 	"GenesisTask/routes"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	godotenv.Load(".env")
 	emails.EnsureFileExists()
 	router := gin.Default()
 
