@@ -1,18 +1,8 @@
 package config
 
-import (
-	"log"
-	"testing"
+import "testing"
 
-	"github.com/joho/godotenv"
-)
-
-func TestIsConfigPresent(t *testing.T) {
-	err := godotenv.Load("./../.env") // from upper directory
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func TestThatConfigIsPresent(t *testing.T) {
 	cfg := Get()
 
 	if cfg.ServerURL == "" {

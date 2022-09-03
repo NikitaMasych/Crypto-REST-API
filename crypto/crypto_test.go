@@ -1,19 +1,10 @@
 package crypto
 
-import (
-	"log"
-	"testing"
+import "testing"
 
-	"github.com/joho/godotenv"
-)
+func TestThatCryptoRateReceived(t *testing.T) {
 
-func TestIsCryptoRateValid(t *testing.T) {
-	err := godotenv.Load("./../.env") // from upper directory
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = GetConfigCurrencyRate()
+	_, err := GetConfigCurrencyRate()
 
 	if err != nil {
 		t.Error(err)

@@ -1,9 +1,12 @@
 package config
 
 import (
+	"log"
 	"os"
 	"strconv"
 	"sync"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -26,6 +29,7 @@ var (
 func Get() *Config {
 
 	once.Do(func() {
+		loadEnv()
 		cfg = Config{
 			ServerURL:          os.Getenv(ServerUrl),
 			CryptoApiFormatUrl: os.Getenv(CryptoApiFormatUrl),
@@ -39,4 +43,16 @@ func Get() *Config {
 		cfg.SMTPPort, _ = strconv.Atoi(os.Getenv(SMTPPort))
 	})
 	return &cfg
+}
+
+func loadEnv() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		// in case we test from inner directories;
+		// sequence to go to the upper one
+		err = godotenv.Load("./../.env")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
