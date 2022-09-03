@@ -2,7 +2,6 @@ package emails
 
 import (
 	"GenesisTask/config"
-	"GenesisTask/errors"
 	"bufio"
 	"log"
 	"os"
@@ -10,7 +9,7 @@ import (
 )
 
 func EnsureFileExists() {
-	EnsureDirectoryExist()
+	ensureDirectoryExists()
 	path := config.Get().StorageFile
 	_, err := os.Stat(path)
 	if os.IsNotExist(err) {
@@ -22,7 +21,7 @@ func EnsureFileExists() {
 	}
 }
 
-func EnsureDirectoryExist() {
+func ensureDirectoryExists() {
 	path := config.Get().StorageFile
 	directory := strings.Split(path, "/")[0]
 	_, err := os.Stat(directory)
@@ -34,17 +33,13 @@ func EnsureDirectoryExist() {
 	}
 }
 
-func AddEmail(email string) error {
+func AddEmail(email string) {
 	path := config.Get().StorageFile
-	file, err := os.OpenFile(path, os.O_RDWR, 0644)
+	file, err := os.OpenFile(path, os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
-
-	if isEmailSaved(file, email) {
-		return errors.ErrAlreadyExists
-	}
 
 	_, err = file.WriteString(email + "\n")
 	if err != nil {
@@ -55,11 +50,16 @@ func AddEmail(email string) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	return nil
 }
 
-func isEmailSaved(file *os.File, email string) bool {
+func IsEmailSaved(email string) bool {
+	path := config.Get().StorageFile
+	file, err := os.OpenFile(path, os.O_RDONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if email == scanner.Text() {

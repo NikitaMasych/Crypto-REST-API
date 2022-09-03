@@ -14,6 +14,7 @@ func TestIsCryptoRateValid(t *testing.T) {
 	}
 
 	_, err = GetConfigCurrencyRate()
+
 	if err != nil {
 		t.Error(err)
 	}

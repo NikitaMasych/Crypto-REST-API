@@ -3,7 +3,6 @@ package routes
 import (
 	"GenesisTask/crypto"
 	"GenesisTask/emails"
-	"GenesisTask/errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,10 +19,10 @@ func GetRate(c *gin.Context) {
 
 func PostSubscribe(c *gin.Context) {
 	email := c.PostForm("email")
-	err := emails.AddEmail(email)
-	if err == errors.ErrAlreadyExists {
+	if emails.IsEmailSaved(email) {
 		c.JSON(http.StatusConflict, gin.H{"description": "Email is already subscribed"})
 	} else {
+		emails.AddEmail(email)
 		c.JSON(http.StatusOK, gin.H{"description": "Email successfully subscribed"})
 	}
 }
