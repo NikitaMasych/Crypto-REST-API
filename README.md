@@ -22,20 +22,19 @@ $ docker run -d -p 8080:8080 genapp
 .
 ├── config
 │   ├── config.go
+│   ├── config_test.go
 │   └── env_names.go
 ├── crypto
-│   └── crypto.go
+│   ├── crypto.go
+│   └── crypto_test.go
 ├── Dockerfile
 ├── emails
 │   ├── email_data.go
-│   └── email_processing.go
-├── errors
-│   └── errors.go
+│   ├── email_processing.go
+│   └── emails_test.go
 ├── go.mod
 ├── go.sum
 ├── main.go
-├── platform
-│   └── subscribed_emails.txt
 ├── README.md
 └── routes
     └── routes.go
