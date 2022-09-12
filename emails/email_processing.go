@@ -3,44 +3,29 @@ package emails
 import (
 	"GenesisTask/config"
 	"GenesisTask/crypto"
-	"bufio"
+	"GenesisTask/model"
 	"log"
-	"os"
 	"strconv"
 	"time"
 
 	"gopkg.in/gomail.v2"
 )
 
-func SendEmails() {
+func SendEmails(users *[]model.User) {
 	cfg := config.Get()
-	path := cfg.StorageFile
-	file, err := os.OpenFile(path, os.O_RDONLY, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
 	dialer := gomail.NewDialer(cfg.SMTPHost, cfg.SMTPPort,
 		cfg.EmailAddress, cfg.EmailPassword)
 
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
 	msg := composeMessage()
 
-	for scanner.Scan() {
-		to := scanner.Text()
+	for _, user := range *users {
+		to := user.GetEmail()
 		msg.SetHeader("To", to)
 
 		if err := dialer.DialAndSend(msg); err != nil {
 			log.Fatal(err)
 		}
 	}
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
-
 }
 
 func composeMessage() *gomail.Message {

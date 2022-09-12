@@ -2,8 +2,10 @@ package main
 
 import (
 	"GenesisTask/config"
-	"GenesisTask/emails"
+	"GenesisTask/platform"
+	"GenesisTask/repository"
 	"GenesisTask/routes"
+
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -15,12 +17,24 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	emails.EnsureFileExists()
+
+	platform.EnsureFileExists()
+	userRepo := repository.New()
+
 	router := gin.Default()
+
+	router.Use(attachRepository(userRepo))
 
 	router.GET("/api/rate", routes.GetRate)
 	router.POST("/api/subscribe", routes.PostSubscribe)
 	router.POST("/api/sendEmails", routes.PostSendMessage)
 
 	router.Run(config.Get().ServerURL)
+}
+
+func attachRepository(r repository.UserRepository) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("userRepo", r)
+		c.Next()
+	}
 }
