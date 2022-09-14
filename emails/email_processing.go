@@ -29,7 +29,8 @@ func SendEmails(users *[]model.User) {
 }
 
 func composeMessage() *gomail.Message {
-	price, err := crypto.GetConfigCurrencyRate()
+	providerCreator := crypto.EnvProviderDescriptor()
+	price, err := crypto.GetCryptoRate(providerCreator)
 	if err != nil {
 		log.Fatal("Unable to get bitcoin price!")
 	}

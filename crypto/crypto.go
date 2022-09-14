@@ -2,33 +2,31 @@ package crypto
 
 import (
 	"GenesisTask/config"
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"strconv"
+	"log"
 )
 
-type decodedResponse struct {
-	Data struct {
-		BaseCurrency   string `json:"base"`
-		QuotedCurrency string `json:"currency"`
-		Price          string `json:"amount"`
-	} `json:"data"`
+type CryptoProvider interface {
+	GetConfigCurrencyRate() (float64, error)
 }
 
-func GetConfigCurrencyRate() (float64, error) {
-	cfg := config.Get()
-	CryptoApiUrl := fmt.Sprintf(
-		cfg.CryptoApiFormatUrl, cfg.BaseCurrency, cfg.QuotedCurrency)
+type CryptoProviderCreator interface {
+	CreateProvider() CryptoProvider
+}
 
-	resp, err := http.Get(CryptoApiUrl)
-	if err != nil {
-		return 0, err
-	}
+func GetCryptoRate(p CryptoProviderCreator) (float64, error) {
+	return p.CreateProvider().GetConfigCurrencyRate()
+}
 
-	var cryptoRate decodedResponse
-	if err := json.NewDecoder(resp.Body).Decode(&cryptoRate); err != nil {
-		return 0, err
+func EnvProviderDescriptor() CryptoProviderCreator {
+	provider := config.Get().CryptoCurrencyProvider
+	switch provider {
+	case "binance":
+		return new(BinanceProviderCreator)
+	case "coinbase":
+		return new(CoinbaseProviderCreator)
+	default:
+		log.Fatal("Unknown provider")
 	}
-	return strconv.ParseFloat(cryptoRate.Data.Price, 64)
+	// never reach here, golang requirement
+	return new(CoinbaseProviderCreator)
 }

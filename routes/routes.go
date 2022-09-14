@@ -12,7 +12,11 @@ import (
 )
 
 func GetRate(c *gin.Context) {
-	price, err := crypto.GetConfigCurrencyRate()
+	providerCreator := crypto.EnvProviderDescriptor()
+	price, err := crypto.GetCryptoRate(providerCreator)
+	if err != nil {
+		log.Fatal("Unable to get bitcoin price!", err)
+	}
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"description": "Invalid status value"})
 	} else {

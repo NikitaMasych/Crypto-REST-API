@@ -10,15 +10,17 @@ import (
 )
 
 type Config struct {
-	ServerURL          string
-	BaseCurrency       string
-	QuotedCurrency     string
-	CryptoApiFormatUrl string
-	EmailAddress       string
-	EmailPassword      string
-	StorageFile        string
-	SMTPHost           string
-	SMTPPort           int
+	ServerURL              string
+	BinanceApiFormatUrl    string
+	CoinbaseApiFormatUrl   string
+	BaseCurrency           string
+	QuotedCurrency         string
+	CryptoCurrencyProvider string
+	EmailAddress           string
+	EmailPassword          string
+	StorageFile            string
+	SMTPHost               string
+	SMTPPort               int
 }
 
 var (
@@ -31,14 +33,16 @@ func Get() *Config {
 	once.Do(func() {
 		loadEnv()
 		cfg = Config{
-			ServerURL:          os.Getenv(ServerUrl),
-			CryptoApiFormatUrl: os.Getenv(CryptoApiFormatUrl),
-			BaseCurrency:       os.Getenv(BaseCurrency),
-			QuotedCurrency:     os.Getenv(QuotedCurrency),
-			EmailAddress:       os.Getenv(EmailAddress),
-			EmailPassword:      os.Getenv(EmailPassword),
-			StorageFile:        os.Getenv(StorageFile),
-			SMTPHost:           os.Getenv(SMTPHost),
+			ServerURL:              os.Getenv(ServerUrl),
+			BinanceApiFormatUrl:    os.Getenv(BinanceApiFormatUrl),
+			CoinbaseApiFormatUrl:   os.Getenv(CoinbaseApiFormatUrl),
+			BaseCurrency:           os.Getenv(BaseCurrency),
+			QuotedCurrency:         os.Getenv(QuotedCurrency),
+			CryptoCurrencyProvider: os.Getenv(CryptoCurrencyProvider),
+			EmailAddress:           os.Getenv(EmailAddress),
+			EmailPassword:          os.Getenv(EmailPassword),
+			StorageFile:            os.Getenv(StorageFile),
+			SMTPHost:               os.Getenv(SMTPHost),
 		}
 		cfg.SMTPPort, _ = strconv.Atoi(os.Getenv(SMTPPort))
 	})
