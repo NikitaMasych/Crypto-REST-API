@@ -1,6 +1,7 @@
 package crypto
 
 import (
+	"GenesisTask/cache"
 	"GenesisTask/config"
 	"log"
 )
@@ -43,6 +44,9 @@ func GetCryptoRate() (float64, error) {
 				return 0, err
 			}
 		}
+	}
+	if err == nil {
+		cache.AddCryptoRateToCache(price)
 	}
 	return price, err
 }

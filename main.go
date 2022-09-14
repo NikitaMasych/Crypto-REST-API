@@ -1,6 +1,7 @@
 package main
 
 import (
+	"GenesisTask/cache"
 	"GenesisTask/config"
 	"GenesisTask/platform"
 	"GenesisTask/repository"
@@ -17,6 +18,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	cache.InitCache()
 
 	platform.EnsureFileExists()
 	userRepo := repository.New()

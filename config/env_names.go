@@ -14,4 +14,5 @@ const (
 	StorageFile            string = "STORAGE_FILE"
 	SMTPHost               string = "SMTP_HOST"
 	SMTPPort               string = "SMTP_PORT"
+	CacheDurationMins      string = "CACHE_DURATION_MINS"
 )

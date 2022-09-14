@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"GenesisTask/cache"
 	"GenesisTask/crypto"
 	"GenesisTask/emails"
 	"GenesisTask/model"
@@ -12,9 +13,13 @@ import (
 )
 
 func GetRate(c *gin.Context) {
-	price, err := crypto.GetCryptoRate()
+	price, err := cache.GetCryptoRateFromCache()
 	if err != nil {
-		log.Fatal("Unable to get bitcoin price!", err)
+		log.Print("Getting not from cache")
+		price, err = crypto.GetCryptoRate()
+	}
+	if err != nil {
+		log.Fatal("Unable to get bitcoin price", err)
 	}
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"description": "Invalid status value"})

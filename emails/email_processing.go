@@ -1,6 +1,7 @@
 package emails
 
 import (
+	"GenesisTask/cache"
 	"GenesisTask/config"
 	"GenesisTask/crypto"
 	"GenesisTask/model"
@@ -29,9 +30,13 @@ func SendEmails(users *[]model.User) {
 }
 
 func composeMessage() *gomail.Message {
-	price, err := crypto.GetCryptoRate()
+	price, err := cache.GetCryptoRateFromCache()
 	if err != nil {
-		log.Fatal("Unable to get bitcoin price!")
+		log.Print("Getting not from cache")
+		price, err = crypto.GetCryptoRate()
+		if err != nil {
+			log.Fatal("Unable to get crypto rate")
+		}
 	}
 	subject := "Crypto Rate"
 	body := config.Get().BaseCurrency + " price on " + time.Now().String() + " : " +
