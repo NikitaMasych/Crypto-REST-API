@@ -13,6 +13,8 @@ type Config struct {
 	ServerURL              string
 	BinanceApiFormatUrl    string
 	CoinbaseApiFormatUrl   string
+	CoinApiFormatURL       string
+	CoinApiKey             string
 	BaseCurrency           string
 	QuotedCurrency         string
 	CryptoCurrencyProvider string
@@ -36,6 +38,8 @@ func Get() *Config {
 			ServerURL:              os.Getenv(ServerUrl),
 			BinanceApiFormatUrl:    os.Getenv(BinanceApiFormatUrl),
 			CoinbaseApiFormatUrl:   os.Getenv(CoinbaseApiFormatUrl),
+			CoinApiFormatURL:       os.Getenv(CoinApiFormatURL),
+			CoinApiKey:             os.Getenv(CoinApiKey),
 			BaseCurrency:           os.Getenv(BaseCurrency),
 			QuotedCurrency:         os.Getenv(QuotedCurrency),
 			CryptoCurrencyProvider: os.Getenv(CryptoCurrencyProvider),

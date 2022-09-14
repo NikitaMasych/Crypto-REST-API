@@ -12,8 +12,7 @@ import (
 )
 
 func GetRate(c *gin.Context) {
-	providerCreator := crypto.EnvProviderDescriptor()
-	price, err := crypto.GetCryptoRate(providerCreator)
+	price, err := crypto.GetCryptoRate()
 	if err != nil {
 		log.Fatal("Unable to get bitcoin price!", err)
 	}
