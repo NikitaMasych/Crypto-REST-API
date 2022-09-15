@@ -27,6 +27,7 @@ func (p *CoinbaseProvider) GetConfigCurrencyRate() (float64, error) {
 		return 0, err
 	}
 	logger.AddProviderResponseToLog(resp)
+
 	if err := json.NewDecoder(resp.Body).Decode(&p); err != nil {
 		return 0, err
 	}

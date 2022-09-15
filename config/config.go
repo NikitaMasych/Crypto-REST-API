@@ -35,7 +35,7 @@ var (
 func Get() *Config {
 
 	once.Do(func() {
-		loadEnv()
+		LoadEnv()
 		cfg = Config{
 			ServerURL:              os.Getenv(ServerUrl),
 			BinanceApiFormatUrl:    os.Getenv(BinanceApiFormatUrl),
@@ -57,7 +57,7 @@ func Get() *Config {
 	return &cfg
 }
 
-func loadEnv() {
+func LoadEnv() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		// in case we test from inner directories;

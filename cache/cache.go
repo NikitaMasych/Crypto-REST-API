@@ -44,7 +44,7 @@ func GetCryptoRateFromCache() (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	stringPrice := string(bytePrice) //fmt.Sprintf("%s", (bytePrice))
+	stringPrice := string(bytePrice)
 	price, err := strconv.ParseFloat(stringPrice, 64)
 	if err != nil {
 		return 0, err

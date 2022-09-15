@@ -29,6 +29,7 @@ func (p *CoinApiProvider) GetConfigCurrencyRate() (float64, error) {
 		return 0, err
 	}
 	logger.AddProviderResponseToLog(resp.RawResponse)
+
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
 		return 0, err
 	}

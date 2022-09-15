@@ -31,7 +31,7 @@ func EnvProviderDescriptor() CryptoProviderCreator {
 		log.Fatal("Unknown provider")
 	}
 	// never reach here, golang requirement
-	return new(CoinbaseProviderCreator)
+	return *new(CryptoProviderCreator)
 }
 
 func GetCryptoRate() (float64, error) {
