@@ -1,15 +1,13 @@
 package platform
 
 import (
-	"GenesisTask/config"
 	"log"
 	"os"
 	"strings"
 )
 
-func EnsureFileExists() {
-	ensureDirectoryExists()
-	path := config.Get().StorageFile
+func EnsureFileExists(path string) {
+	ensureDirectoryExists(path)
 	_, err := os.Stat(path)
 	if os.IsNotExist(err) {
 		file, err := os.Create(path)
@@ -20,8 +18,7 @@ func EnsureFileExists() {
 	}
 }
 
-func ensureDirectoryExists() {
-	path := config.Get().StorageFile
+func ensureDirectoryExists(path string) {
 	directory := strings.Split(path, "/")[0]
 	_, err := os.Stat(directory)
 	if os.IsNotExist(err) {

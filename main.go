@@ -21,23 +21,18 @@ func main() {
 
 	cache.InitCache()
 
-	platform.EnsureFileExists()
+	platform.EnsureFileExists(config.Get().LoggerFile)
+	platform.EnsureFileExists(config.Get().StorageFile)
+
 	userRepo := repository.New()
 
 	router := gin.Default()
 
-	router.Use(attachRepository(userRepo))
+	router.Use(repository.AttachRepository(userRepo))
 
 	router.GET("/api/rate", routes.GetRate)
 	router.POST("/api/subscribe", routes.PostSubscribe)
 	router.POST("/api/sendEmails", routes.PostSendMessage)
 
 	router.Run(config.Get().ServerURL)
-}
-
-func attachRepository(r repository.UserRepository) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Set("userRepo", r)
-		c.Next()
-	}
 }

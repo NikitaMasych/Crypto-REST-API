@@ -12,6 +12,7 @@ const (
 	EmailAddress           string = "EMAIL_ADDRESS"
 	EmailPassword          string = "EMAIL_PASSWORD"
 	StorageFile            string = "STORAGE_FILE"
+	LoggerFile             string = "LOGGER_FILE"
 	SMTPHost               string = "SMTP_HOST"
 	SMTPPort               string = "SMTP_PORT"
 	CacheDurationMins      string = "CACHE_DURATION_MINS"

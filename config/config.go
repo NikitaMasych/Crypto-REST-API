@@ -21,6 +21,7 @@ type Config struct {
 	EmailAddress           string
 	EmailPassword          string
 	StorageFile            string
+	LoggerFile             string
 	SMTPHost               string
 	SMTPPort               int
 	CacheDurationMins      int
@@ -47,6 +48,7 @@ func Get() *Config {
 			EmailAddress:           os.Getenv(EmailAddress),
 			EmailPassword:          os.Getenv(EmailPassword),
 			StorageFile:            os.Getenv(StorageFile),
+			LoggerFile:             os.Getenv(LoggerFile),
 			SMTPHost:               os.Getenv(SMTPHost),
 		}
 		cfg.SMTPPort, _ = strconv.Atoi(os.Getenv(SMTPPort))

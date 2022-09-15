@@ -2,6 +2,7 @@ package crypto
 
 import (
 	"GenesisTask/config"
+	"GenesisTask/logger"
 	"encoding/json"
 	"fmt"
 
@@ -27,6 +28,7 @@ func (p *CoinApiProvider) GetConfigCurrencyRate() (float64, error) {
 	if err != nil {
 		return 0, err
 	}
+	logger.AddProviderResponseToLog(resp.RawResponse)
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
 		return 0, err
 	}

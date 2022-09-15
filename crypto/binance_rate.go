@@ -2,6 +2,7 @@ package crypto
 
 import (
 	"GenesisTask/config"
+	"GenesisTask/logger"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -23,6 +24,7 @@ func (p *BinanceProvider) GetConfigCurrencyRate() (float64, error) {
 	if err != nil {
 		return 0, err
 	}
+	logger.AddProviderResponseToLog(resp)
 
 	if err := json.NewDecoder(resp.Body).Decode(&p.Response); err != nil {
 		return 0, err

@@ -13,11 +13,13 @@ import (
 )
 
 func GetRate(c *gin.Context) {
+
 	price, err := cache.GetCryptoRateFromCache()
 	if err != nil {
 		log.Print("Getting not from cache")
 		price, err = crypto.GetCryptoRate()
 	}
+
 	if err != nil {
 		log.Fatal("Unable to get bitcoin price", err)
 	}

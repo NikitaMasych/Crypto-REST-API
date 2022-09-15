@@ -6,7 +6,16 @@ import (
 	"bufio"
 	"log"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
+
+func AttachRepository(r UserRepository) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("userRepo", r)
+		c.Next()
+	}
+}
 
 type UserFileRepository struct {
 	path string
