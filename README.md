@@ -20,23 +20,47 @@ $ docker run -d -p 8080:8080 genapp
 # Project structure
 ```
 .
+├── Assignment_specification.pdf
+├── cache
+│   ├── cache.go
+│   ├── cache_test.go
+│   └── utils.go
 ├── config
 │   ├── config.go
 │   ├── config_test.go
 │   └── env_names.go
 ├── crypto
-│   ├── crypto.go
+│   ├── binance_rate.go
+│   ├── binance_service.go
+│   ├── coinapi_rate.go
+│   ├── coinapi_service.go
+│   ├── coinbase_rate.go
+│   ├── coinbase_service.go
+│   ├── cryptochain.go
+│   ├── crypto_provider.go
 │   └── crypto_test.go
 ├── Dockerfile
 ├── emails
-│   ├── email_data.go
-│   ├── email_processing.go
-│   └── emails_test.go
+│   └── email_processing.go
+├── errors
+│   └── errors.go
 ├── go.mod
 ├── go.sum
+├── logger
+│   └── logger.go
 ├── main.go
+├── model
+│   └── user.go
+├── platform
+│   ├── file_assurance.go
+│   └── platform_test.go
 ├── README.md
+├── repository
+│   ├── file_repository.go
+│   ├── interface.go
+│   └── repository_test.go
 └── routes
     └── routes.go
+
 ```
 Good reviewing!
