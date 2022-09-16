@@ -5,33 +5,32 @@ import (
 	"GenesisTask/logger"
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"strconv"
+
+	"gopkg.in/resty.v0"
 )
 
 type CoinbaseProvider struct {
 	Response struct {
-		BaseCurrency   string `json:"base"`
-		QuotedCurrency string `json:"currency"`
-		Price          string `json:"amount"`
+		Price string `json:"amount"`
 	} `json:"data"`
 }
 
 func (p *CoinbaseProvider) GetConfigCurrencyRate() (float64, error) {
 	cfg := config.Get()
-	CryptoApiUrl := fmt.Sprintf(
+	CoinbaseApiUrl := fmt.Sprintf(
 		cfg.CoinbaseApiFormatUrl, cfg.BaseCurrency, cfg.QuotedCurrency)
 
-	resp, err := http.Get(CryptoApiUrl)
+	resp, err := resty.R().Get(CoinbaseApiUrl)
 	if err != nil {
 		return 0, err
 	}
-	logger.AddProviderResponseToLog(resp)
 
-	if err := json.NewDecoder(resp.Body).Decode(&p); err != nil {
+	go logger.AddProviderResponseToLog("Coinbase", resp)
+
+	if err := json.Unmarshal(resp.Body, &p); err != nil {
 		return 0, err
 	}
-
 	return strconv.ParseFloat(p.Response.Price, 64)
 }
 

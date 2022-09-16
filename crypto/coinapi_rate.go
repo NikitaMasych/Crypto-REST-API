@@ -11,10 +11,7 @@ import (
 
 type CoinApiProvider struct {
 	Response struct {
-		Time           string  `json:"time"`
-		BaseCurrency   string  `json:"asset_id_base"`
-		QuotedCurrency string  `json:"asset_id_quote"`
-		Price          float64 `json:"rate"`
+		Price float64 `json:"rate"`
 	}
 }
 
@@ -28,7 +25,8 @@ func (p *CoinApiProvider) GetConfigCurrencyRate() (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	logger.AddProviderResponseToLog(resp.RawResponse)
+
+	go logger.AddProviderResponseToLog("CoinApi", resp)
 
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
 		return 0, err

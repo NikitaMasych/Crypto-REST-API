@@ -13,7 +13,6 @@ import (
 )
 
 func GetRate(c *gin.Context) {
-
 	price, err := cache.GetCryptoRateFromCache()
 	if err != nil {
 		log.Print("Getting not from cache")

@@ -5,8 +5,9 @@ import (
 	"GenesisTask/logger"
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"strconv"
+
+	"gopkg.in/resty.v0"
 )
 
 type BinanceProvider struct {
@@ -20,13 +21,14 @@ func (p *BinanceProvider) GetConfigCurrencyRate() (float64, error) {
 	BinanceApiUrl := fmt.Sprintf(
 		cfg.BinanceApiFormatUrl, cfg.BaseCurrency, cfg.QuotedCurrency)
 
-	resp, err := http.Get(BinanceApiUrl)
+	resp, err := resty.R().Get(BinanceApiUrl)
 	if err != nil {
 		return 0, err
 	}
-	logger.AddProviderResponseToLog(resp)
 
-	if err := json.NewDecoder(resp.Body).Decode(&p.Response); err != nil {
+	go logger.AddProviderResponseToLog("Binance", resp)
+
+	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
 		return 0, err
 	}
 	return strconv.ParseFloat(p.Response.Price, 64)

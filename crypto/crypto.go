@@ -35,12 +35,15 @@ func EnvProviderDescriptor() CryptoProviderCreator {
 }
 
 func GetCryptoRate() (float64, error) {
-	price, err := new(CoinbaseProviderCreator).CreateProvider().GetConfigCurrencyRate()
+	price, err := new(BinanceProviderCreator).CreateProvider().GetConfigCurrencyRate()
 	if err != nil {
+		log.Print("Can't get rate from coinbase")
 		price, err = new(BinanceProviderCreator).CreateProvider().GetConfigCurrencyRate()
 		if err != nil {
+			log.Print("Can't get rate from binance")
 			price, err = new(CoinApiProviderCreator).CreateProvider().GetConfigCurrencyRate()
 			if err != nil {
+				log.Print("Can't get rate from coinapi")
 				return 0, err
 			}
 		}
