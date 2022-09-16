@@ -7,24 +7,18 @@ import (
 	"GenesisTask/repository"
 	"GenesisTask/routes"
 
-	"log"
-
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	cache.InitCache()
 
 	platform.EnsureFileExists(config.Get().LoggerFile)
 	platform.EnsureFileExists(config.Get().StorageFile)
 
 	userRepo := repository.New()
+
+	gin.SetMode(gin.ReleaseMode)
 
 	router := gin.Default()
 

@@ -12,9 +12,10 @@ import (
 
 func TestThatBinanceProviderReturnsRate(t *testing.T) {
 	var p BinanceProvider
+	cfg := config.Get()
 	provideArrange()
 
-	rate, err := p.GetConfigCurrencyRate()
+	rate, err := p.getCurrencyRate(cfg.BaseCurrency, cfg.QuotedCurrency)
 
 	assert.Equal(t, err, nil)
 	assert.NotEqual(t, rate, 0)
@@ -24,9 +25,10 @@ func TestThatBinanceProviderReturnsRate(t *testing.T) {
 
 func TestThatCoinbaseProviderReturnsRate(t *testing.T) {
 	var p CoinbaseProvider
+	cfg := config.Get()
 	provideArrange()
 
-	rate, err := p.GetConfigCurrencyRate()
+	rate, err := p.getCurrencyRate(cfg.BaseCurrency, cfg.QuotedCurrency)
 
 	assert.Equal(t, err, nil)
 	assert.NotEqual(t, rate, 0)
@@ -36,9 +38,10 @@ func TestThatCoinbaseProviderReturnsRate(t *testing.T) {
 
 func TestThatCoinApiProviderReturnsRate(t *testing.T) {
 	var p CoinApiProvider
+	cfg := config.Get()
 	provideArrange()
 
-	rate, err := p.GetConfigCurrencyRate()
+	rate, err := p.getCurrencyRate(cfg.BaseCurrency, cfg.QuotedCurrency)
 
 	assert.Equal(t, err, nil)
 	assert.NotEqual(t, rate, 0)

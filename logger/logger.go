@@ -8,7 +8,7 @@ import (
 	"gopkg.in/resty.v0"
 )
 
-func AddProviderResponseToLog(provider string, resp *resty.Response) {
+func LogProviderResponse(provider string, resp *resty.Response) {
 	loggerPath := config.Get().LoggerFile
 	file, err := os.OpenFile(loggerPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {

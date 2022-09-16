@@ -16,17 +16,16 @@ type CoinbaseProvider struct {
 	} `json:"data"`
 }
 
-func (p *CoinbaseProvider) GetConfigCurrencyRate() (float64, error) {
-	cfg := config.Get()
+func (p *CoinbaseProvider) getCurrencyRate(base, quoted string) (float64, error) {
 	CoinbaseApiUrl := fmt.Sprintf(
-		cfg.CoinbaseApiFormatUrl, cfg.BaseCurrency, cfg.QuotedCurrency)
+		config.Get().CoinbaseApiFormatUrl, base, quoted)
 
 	resp, err := resty.R().Get(CoinbaseApiUrl)
 	if err != nil {
 		return 0, err
 	}
 
-	go logger.AddProviderResponseToLog("Coinbase", resp)
+	go logger.LogProviderResponse("Coinbase", resp)
 
 	if err := json.Unmarshal(resp.Body, &p); err != nil {
 		return 0, err
@@ -36,6 +35,6 @@ func (p *CoinbaseProvider) GetConfigCurrencyRate() (float64, error) {
 
 type CoinbaseProviderCreator struct{}
 
-func (p *CoinbaseProviderCreator) CreateProvider() CryptoProvider {
+func (p *CoinbaseProviderCreator) createProvider() CryptoProvider {
 	return new(CoinbaseProvider)
 }

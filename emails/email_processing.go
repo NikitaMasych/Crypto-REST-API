@@ -30,15 +30,15 @@ func SendEmails(users *[]model.User) {
 }
 
 func composeMessage() *gomail.Message {
-	price, err := cache.GetCryptoRateFromCache()
+	price, err := cache.GetConfigCurrencyRateFromCache()
 	if err != nil {
 		log.Print("Getting not from cache")
-		price, err = crypto.GetCryptoRate()
+		price, err = crypto.GetConfigCurrencyRate()
 		if err != nil {
-			log.Fatal("Unable to get crypto rate")
+			log.Fatal("Unable to get currency rate")
 		}
 	}
-	subject := "Crypto Rate"
+	subject := "Currency Rate"
 	body := config.Get().BaseCurrency + " price on " + time.Now().String() + " : " +
 		strconv.FormatFloat(price, 'f', -1, 64) + config.Get().QuotedCurrency
 

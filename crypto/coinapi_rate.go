@@ -15,10 +15,10 @@ type CoinApiProvider struct {
 	}
 }
 
-func (p *CoinApiProvider) GetConfigCurrencyRate() (float64, error) {
+func (p *CoinApiProvider) getCurrencyRate(base, quoted string) (float64, error) {
 	cfg := config.Get()
 	CoinApiURL := fmt.Sprintf(
-		cfg.CoinApiFormatURL, cfg.BaseCurrency, cfg.QuotedCurrency)
+		cfg.CoinApiFormatURL, base, quoted)
 
 	resp, err := resty.R().SetHeader("X-CoinAPI-Key", cfg.CoinApiKey).
 		Get(CoinApiURL)
@@ -26,7 +26,7 @@ func (p *CoinApiProvider) GetConfigCurrencyRate() (float64, error) {
 		return 0, err
 	}
 
-	go logger.AddProviderResponseToLog("CoinApi", resp)
+	go logger.LogProviderResponse("CoinApi", resp)
 
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
 		return 0, err
@@ -36,6 +36,6 @@ func (p *CoinApiProvider) GetConfigCurrencyRate() (float64, error) {
 
 type CoinApiProviderCreator struct{}
 
-func (p *CoinApiProviderCreator) CreateProvider() CryptoProvider {
+func (p *CoinApiProviderCreator) createProvider() CryptoProvider {
 	return new(CoinApiProvider)
 }

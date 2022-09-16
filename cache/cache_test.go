@@ -10,8 +10,8 @@ func TestThatCryptoRateAddGetIsSuccessfull(t *testing.T) {
 	InitCache()
 	expectedRate := 10.213
 
-	AddCryptoRateToCache(expectedRate)
-	receivedRate, err := GetCryptoRateFromCache()
+	AddCurrencyRateToCache(expectedRate)
+	receivedRate, err := GetConfigCurrencyRateFromCache()
 
 	assert.Equal(t, err, nil)
 	assert.Equal(t, expectedRate, receivedRate)

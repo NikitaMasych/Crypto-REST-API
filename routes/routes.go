@@ -13,15 +13,11 @@ import (
 )
 
 func GetRate(c *gin.Context) {
-	price, err := cache.GetCryptoRateFromCache()
+	price, err := cache.GetConfigCurrencyRateFromCache()
 	if err != nil {
-		log.Print("Getting not from cache")
-		price, err = crypto.GetCryptoRate()
+		price, err = crypto.GetConfigCurrencyRate()
 	}
 
-	if err != nil {
-		log.Fatal("Unable to get bitcoin price", err)
-	}
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"description": "Invalid status value"})
 	} else {

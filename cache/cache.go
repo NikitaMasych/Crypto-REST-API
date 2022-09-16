@@ -2,52 +2,38 @@ package cache
 
 import (
 	"GenesisTask/config"
-	"fmt"
-	"log"
-	"strconv"
+	"GenesisTask/errors"
 	"sync"
 	"time"
 
-	"github.com/allegro/bigcache"
+	"github.com/patrickmn/go-cache"
 )
 
 var (
-	cache *bigcache.BigCache
-	once  sync.Once
+	c    *cache.Cache
+	once sync.Once
 )
 
 func InitCache() {
 	once.Do(func() {
-		var err error
-		duration := time.Duration(config.Get().CacheDurationMins)
-		cache, err = bigcache.NewBigCache(bigcache.DefaultConfig(duration))
-		if err != nil {
-			log.Fatal(err)
-		}
+		c = cache.New(cache.NoExpiration, cache.NoExpiration)
 	})
 }
 
-func AddCryptoRateToCache(price float64) {
+func AddCurrencyRateToCache(price float64) {
 	cfg := config.Get()
 	rateAssets := cfg.BaseCurrency + "-" + cfg.QuotedCurrency
-	convertedPrice := []byte(fmt.Sprintf("%f", price))
-	err := cache.Set(rateAssets, convertedPrice)
-	if err != nil {
-		log.Fatal(err)
-	}
+	existingPeriod := time.Duration(config.Get().CacheDurationMins) * time.Minute
+	c.Set(rateAssets, price, existingPeriod)
 }
 
-func GetCryptoRateFromCache() (float64, error) {
+func GetConfigCurrencyRateFromCache() (float64, error) {
 	cfg := config.Get()
 	rateAssets := cfg.BaseCurrency + "-" + cfg.QuotedCurrency
-	bytePrice, err := cache.Get(rateAssets)
-	if err != nil {
-		return 0, err
+	rate, present := c.Get(rateAssets)
+	if !present {
+		return 0, errors.ErrNotPresentInCache
 	}
-	stringPrice := string(bytePrice)
-	price, err := strconv.ParseFloat(stringPrice, 64)
-	if err != nil {
-		return 0, err
-	}
-	return price, nil
+
+	return convertInterfaceToFloat64(rate)
 }

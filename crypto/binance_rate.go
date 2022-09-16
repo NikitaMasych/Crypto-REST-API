@@ -16,17 +16,16 @@ type BinanceProvider struct {
 	}
 }
 
-func (p *BinanceProvider) GetConfigCurrencyRate() (float64, error) {
-	cfg := config.Get()
+func (p *BinanceProvider) getCurrencyRate(base, quoted string) (float64, error) {
 	BinanceApiUrl := fmt.Sprintf(
-		cfg.BinanceApiFormatUrl, cfg.BaseCurrency, cfg.QuotedCurrency)
+		config.Get().BinanceApiFormatUrl, base, quoted)
 
 	resp, err := resty.R().Get(BinanceApiUrl)
 	if err != nil {
 		return 0, err
 	}
 
-	go logger.AddProviderResponseToLog("Binance", resp)
+	go logger.LogProviderResponse("Binance", resp)
 
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
 		return 0, err
@@ -36,6 +35,6 @@ func (p *BinanceProvider) GetConfigCurrencyRate() (float64, error) {
 
 type BinanceProviderCreator struct{}
 
-func (p *BinanceProviderCreator) CreateProvider() CryptoProvider {
+func (p *BinanceProviderCreator) createProvider() CryptoProvider {
 	return new(BinanceProvider)
 }
