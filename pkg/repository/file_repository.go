@@ -2,7 +2,7 @@ package repository
 
 import (
 	"GenesisTask/config"
-	"GenesisTask/model"
+	"GenesisTask/pkg/model"
 	"bufio"
 	"log"
 	"os"

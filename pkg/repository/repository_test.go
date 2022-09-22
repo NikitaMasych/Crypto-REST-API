@@ -2,8 +2,8 @@ package repository
 
 import (
 	"GenesisTask/config"
-	"GenesisTask/model"
-	"GenesisTask/platform"
+	"GenesisTask/pkg/model"
+	"GenesisTask/pkg/platform"
 	"os"
 	"strings"
 	"testing"

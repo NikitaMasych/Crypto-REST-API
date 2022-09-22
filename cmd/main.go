@@ -1,11 +1,11 @@
 package main
 
 import (
-	"GenesisTask/cache"
 	"GenesisTask/config"
-	"GenesisTask/platform"
-	"GenesisTask/repository"
-	"GenesisTask/routes"
+	"GenesisTask/pkg/cache"
+	"GenesisTask/pkg/platform"
+	"GenesisTask/pkg/repository"
+	"GenesisTask/pkg/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,9 +24,7 @@ func main() {
 
 	router.Use(repository.AttachRepository(userRepo))
 
-	router.GET("/api/rate", routes.GetRate)
-	router.POST("/api/subscribe", routes.PostSubscribe)
-	router.POST("/api/sendEmails", routes.PostSendMessage)
+	routes.InitRoutes(router)
 
 	router.Run(config.Get().ServerURL)
 }

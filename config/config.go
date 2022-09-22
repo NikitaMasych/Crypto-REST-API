@@ -61,10 +61,13 @@ func LoadEnv() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		// in case we test from inner directories;
-		// sequence to go to the upper one
-		err = godotenv.Load("./../.env")
+		// sequence to go to the upper ones
+		err = godotenv.Load("./../../.env")
 		if err != nil {
-			log.Fatal(err)
+			err = godotenv.Load("./../.env")
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 }

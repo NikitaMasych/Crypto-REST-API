@@ -1,6 +1,6 @@
 package repository
 
-import "GenesisTask/model"
+import "GenesisTask/pkg/model"
 
 type UserRepository interface {
 	IsExist(user *model.User) bool

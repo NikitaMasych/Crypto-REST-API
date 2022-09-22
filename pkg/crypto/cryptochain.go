@@ -1,8 +1,8 @@
 package crypto
 
 import (
-	"GenesisTask/cache"
 	"GenesisTask/config"
+	"GenesisTask/pkg/cache"
 )
 
 type Cryptochain interface {

@@ -2,7 +2,7 @@ package crypto
 
 import (
 	"GenesisTask/config"
-	"GenesisTask/logger"
+	"GenesisTask/pkg/logger"
 	"encoding/json"
 	"fmt"
 	"strconv"

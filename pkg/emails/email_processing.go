@@ -1,10 +1,10 @@
 package emails
 
 import (
-	"GenesisTask/cache"
 	"GenesisTask/config"
-	"GenesisTask/crypto"
-	"GenesisTask/model"
+	"GenesisTask/pkg/cache"
+	"GenesisTask/pkg/crypto"
+	"GenesisTask/pkg/model"
 	"log"
 	"strconv"
 	"time"

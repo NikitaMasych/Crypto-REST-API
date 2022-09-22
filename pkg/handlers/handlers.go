@@ -1,11 +1,11 @@
-package routes
+package handlers
 
 import (
-	"GenesisTask/cache"
-	"GenesisTask/crypto"
-	"GenesisTask/emails"
-	"GenesisTask/model"
-	"GenesisTask/repository"
+	"GenesisTask/pkg/cache"
+	"GenesisTask/pkg/crypto"
+	"GenesisTask/pkg/emails"
+	"GenesisTask/pkg/model"
+	"GenesisTask/pkg/repository"
 	"log"
 	"net/http"
 
@@ -25,7 +25,7 @@ func GetRate(c *gin.Context) {
 	}
 }
 
-func PostSubscribe(c *gin.Context) {
+func Subscribe(c *gin.Context) {
 	email := c.PostForm("email")
 	user := model.NewUser(email)
 	userRepo := c.MustGet("userRepo").(repository.UserRepository)
@@ -40,7 +40,7 @@ func PostSubscribe(c *gin.Context) {
 	}
 }
 
-func PostSendMessage(c *gin.Context) {
+func SendMessage(c *gin.Context) {
 	userRepo := c.MustGet("userRepo").(repository.UserRepository)
 	users := userRepo.GetUsers()
 	emails.SendEmails(users)

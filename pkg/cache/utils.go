@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"GenesisTask/errors"
+	"GenesisTask/pkg/errors"
 	"reflect"
 )
 

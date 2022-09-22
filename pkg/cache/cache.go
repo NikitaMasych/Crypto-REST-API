@@ -2,7 +2,7 @@ package cache
 
 import (
 	"GenesisTask/config"
-	"GenesisTask/errors"
+	"GenesisTask/pkg/errors"
 	"sync"
 	"time"
 
