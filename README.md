@@ -21,46 +21,52 @@ $ docker run -d -p 8080:8080 genapp
 ```
 .
 ├── Assignment_specification.pdf
-├── cache
-│   ├── cache.go
-│   ├── cache_test.go
-│   └── utils.go
+├── cmd
+│   └── main.go
 ├── config
-│   ├── config.go
-│   ├── config_test.go
-│   └── env_names.go
-├── crypto
-│   ├── binance_rate.go
-│   ├── binance_service.go
-│   ├── coinapi_rate.go
-│   ├── coinapi_service.go
-│   ├── coinbase_rate.go
-│   ├── coinbase_service.go
-│   ├── cryptochain.go
-│   ├── crypto_provider.go
-│   └── crypto_test.go
+│   ├── config.go
+│   ├── config_test.go
+│   └── env_names.go
 ├── Dockerfile
-├── emails
-│   └── email_processing.go
-├── errors
-│   └── errors.go
 ├── go.mod
 ├── go.sum
-├── logger
-│   └── logger.go
-├── main.go
-├── model
-│   └── user.go
-├── platform
-│   ├── file_assurance.go
-│   └── platform_test.go
-├── README.md
-├── repository
-│   ├── file_repository.go
-│   ├── interface.go
-│   └── repository_test.go
-└── routes
-    └── routes.go
+├── pkg
+│   ├── cache
+│   │   ├── cache.go
+│   │   ├── cache_test.go
+│   │   └── utils.go
+│   ├── crypto
+│   │   ├── binance_rate.go
+│   │   ├── binance_service.go
+│   │   ├── coinapi_rate.go
+│   │   ├── coinapi_service.go
+│   │   ├── coinbase_rate.go
+│   │   ├── coinbase_service.go
+│   │   ├── cryptochain.go
+│   │   ├── crypto_provider.go
+│   │   └── crypto_test.go
+│   ├── emails
+│   │   └── email_processing.go
+│   ├── errors
+│   │   └── errors.go
+│   ├── handlers
+│   │   └── handlers.go
+│   ├── logger
+│   │   └── logger.go
+│   ├── model
+│   │   └── user.go
+│   ├── platform
+│   │   ├── file_assurance.go
+│   │   └── platform_test.go
+│   ├── presentation
+│   │   └── json_presenter.go
+│   ├── repository
+│   │   ├── file_repository.go
+│   │   ├── interface.go
+│   │   └── repository_test.go
+│   └── routes
+│       └── routes.go
+└── README.md
 
 ```
 Good reviewing!
