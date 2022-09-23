@@ -5,24 +5,20 @@ import (
 	"GenesisTask/pkg/crypto"
 	"GenesisTask/pkg/emails"
 	"GenesisTask/pkg/model"
+	"GenesisTask/pkg/presentation"
 	"GenesisTask/pkg/repository"
 	"log"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetRate(c *gin.Context) {
-	price, err := cache.GetConfigCurrencyRateFromCache()
+	rate, err := cache.GetConfigCurrencyRateFromCache()
 	if err != nil {
-		price, err = crypto.GetConfigCurrencyRate()
+		rate, err = crypto.GetConfigCurrencyRate()
 	}
 
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"description": "Invalid status value"})
-	} else {
-		c.JSON(http.StatusOK, gin.H{"description": price})
-	}
+	presentation.PresentRateJSON(c, rate, err)
 }
 
 func Subscribe(c *gin.Context) {
@@ -31,12 +27,13 @@ func Subscribe(c *gin.Context) {
 	userRepo := c.MustGet("userRepo").(repository.UserRepository)
 
 	if userRepo.IsExist(user) {
-		c.JSON(http.StatusConflict, gin.H{"description": "User is already subscribed"})
+		presentation.PresentUserConflictJSON(c)
 	} else {
-		if err := userRepo.Add(user); err != nil {
+		err := userRepo.Add(user)
+		if err != nil {
 			log.Fatal(err)
 		}
-		c.JSON(http.StatusOK, gin.H{"description": "User successfully subscribed"})
+		presentation.PresentUserSubscriptionJSON(c)
 	}
 }
 
@@ -44,5 +41,5 @@ func SendMessage(c *gin.Context) {
 	userRepo := c.MustGet("userRepo").(repository.UserRepository)
 	users := userRepo.GetUsers()
 	emails.SendEmails(users)
-	c.JSON(http.StatusOK, gin.H{"description": "Emails has been sent"})
+	presentation.PresentEmailsSentJSON(c)
 }
