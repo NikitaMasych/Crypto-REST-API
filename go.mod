@@ -9,6 +9,13 @@ require (
 )
 
 require (
+	github.com/matthewmcnew/archtest v0.0.0-20191104172020-f1b53a45c22d // indirect
+	golang.org/x/mod v0.4.2 // indirect
+	golang.org/x/tools v0.1.5 // indirect
+	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f // indirect
+)
+
+require (
 	cloud.google.com/go/compute v1.7.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect

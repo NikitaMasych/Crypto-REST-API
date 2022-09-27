@@ -1,4 +1,4 @@
-package delivery
+package main
 
 import (
 	"GenesisTask/config"
