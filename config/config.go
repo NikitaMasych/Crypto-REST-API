@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/joho/godotenv"
@@ -59,21 +60,17 @@ func Get() *Config {
 
 func LoadEnv() {
 	err := godotenv.Load(".env")
-	if err != nil {
-		// in case we test from inner directories;
-		// sequence to go to the upper ones
-		err = godotenv.Load("./../../.env")
-		if err != nil {
-			err = godotenv.Load("./../.env")
-			if err != nil {
-				err = godotenv.Load("./../../../.env")
-				if err != nil {
-					err = godotenv.Load("./../../../../.env")
-					if err != nil {
-						log.Fatal(err)
-					}
-				}
-			}
+	if err == nil {
+		return
+	}
+	// In case we test from inner directories:
+	max_directory_deep := 5
+	for i := 1; i != max_directory_deep; i++ {
+		escape_sequence := strings.Repeat("../", i)
+		err = godotenv.Load("./" + escape_sequence + ".env")
+		if err == nil {
+			return
 		}
 	}
+	log.Fatal(err)
 }
