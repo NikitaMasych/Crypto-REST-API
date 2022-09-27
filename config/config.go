@@ -16,7 +16,7 @@ type Config struct {
 	CoinApiFormatURL       string
 	CoinApiKey             string
 	BaseCurrency           string
-	QuotedCurrency         string
+	QuoteCurrency          string
 	CryptoCurrencyProvider string
 	EmailAddress           string
 	EmailPassword          string
@@ -43,7 +43,7 @@ func Get() *Config {
 			CoinApiFormatURL:       os.Getenv(CoinApiFormatURL),
 			CoinApiKey:             os.Getenv(CoinApiKey),
 			BaseCurrency:           os.Getenv(BaseCurrency),
-			QuotedCurrency:         os.Getenv(QuotedCurrency),
+			QuoteCurrency:          os.Getenv(QuoteCurrency),
 			CryptoCurrencyProvider: os.Getenv(CryptoCurrencyProvider),
 			EmailAddress:           os.Getenv(EmailAddress),
 			EmailPassword:          os.Getenv(EmailPassword),
@@ -66,7 +66,13 @@ func LoadEnv() {
 		if err != nil {
 			err = godotenv.Load("./../.env")
 			if err != nil {
-				log.Fatal(err)
+				err = godotenv.Load("./../../../.env")
+				if err != nil {
+					err = godotenv.Load("./../../../../.env")
+					if err != nil {
+						log.Fatal(err)
+					}
+				}
 			}
 		}
 	}

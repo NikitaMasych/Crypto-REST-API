@@ -15,7 +15,7 @@ func TestIsConfigPresent(t *testing.T) {
 	require.NotEmpty(t, cfg.CoinbaseApiFormatUrl)
 	require.NotEmpty(t, cfg.CoinApiFormatURL)
 	require.NotEmpty(t, cfg.BaseCurrency)
-	require.NotEmpty(t, cfg.QuotedCurrency)
+	require.NotEmpty(t, cfg.QuoteCurrency)
 	require.NotEmpty(t, cfg.CryptoCurrencyProvider)
 	require.NotEmpty(t, cfg.EmailAddress)
 	require.NotEmpty(t, cfg.EmailPassword)
