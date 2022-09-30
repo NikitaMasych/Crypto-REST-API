@@ -8,6 +8,7 @@ import (
 	"GenesisTask/pkg/infrastructure/email"
 	"GenesisTask/pkg/infrastructure/storage/cache"
 	storage "GenesisTask/pkg/infrastructure/storage/emails_repository"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,9 +28,11 @@ func initRoutes(router *gin.Engine, h *handlers.Handlers) {
 }
 
 func createHandlers() (h *handlers.Handlers) {
+	cfg := config.Get()
+
 	providersChain := crypto.NewProvidersChain()
 	emailSender := email.NewGomailSender()
-	cache := cache.NewGoCache()
+	cache := cache.NewRedisCache(cfg.CacheHost, cfg.CacheDb, time.Duration(cfg.CacheDurationMins)*time.Minute)
 	emailAddressesStorage := storage.NewFileRepository()
 	pairSource := config.NewConfigPairSource()
 

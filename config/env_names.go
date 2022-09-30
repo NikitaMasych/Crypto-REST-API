@@ -15,5 +15,7 @@ const (
 	LoggerFile             string = "LOGGER_FILE"
 	SMTPHost               string = "SMTP_HOST"
 	SMTPPort               string = "SMTP_PORT"
+	CacheHost              string = "CACHE_HOST"
+	CacheDb                string = "CACHE_DB"
 	CacheDurationMins      string = "CACHE_DURATION_MINS"
 )

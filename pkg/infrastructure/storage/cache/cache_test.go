@@ -10,7 +10,8 @@ import (
 )
 
 func TestThatCryptoRateAddGetIsSuccessfull(t *testing.T) {
-	c := NewGoCache()
+	cfg := config.Get()
+	c := NewRedisCache(cfg.CacheHost, cfg.CacheDb, time.Duration(cfg.CacheDurationMins)*time.Minute)
 	s := config.NewConfigPairSource()
 	pair := s.GetPair()
 	expectedRate := 10.213

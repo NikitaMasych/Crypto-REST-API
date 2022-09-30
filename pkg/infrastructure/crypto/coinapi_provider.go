@@ -48,7 +48,7 @@ func (p *CoinApiProvider) getRate(pair models.CurrencyPair) (models.CurrencyRate
 		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 
-	go logger.LogProviderResponse("CoinApi", resp)
+	go logger.LogProviderResponse(timestamp, "CoinApi", resp)
 
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
 		return *models.NewCurrencyRate(pair, -1, timestamp), err

@@ -50,7 +50,7 @@ func (p *CoinbaseProvider) getRate(pair models.CurrencyPair) (models.CurrencyRat
 		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 
-	go logger.LogProviderResponse("Coinbase", resp)
+	go logger.LogProviderResponse(timestamp, "Coinbase", resp)
 
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
 		return *models.NewCurrencyRate(pair, -1, timestamp), err

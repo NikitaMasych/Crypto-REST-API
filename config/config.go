@@ -25,6 +25,8 @@ type Config struct {
 	LoggerFile             string
 	SMTPHost               string
 	SMTPPort               int
+	CacheHost              string
+	CacheDb                int
 	CacheDurationMins      int
 }
 
@@ -51,8 +53,10 @@ func Get() *Config {
 			StorageFile:            os.Getenv(StorageFile),
 			LoggerFile:             os.Getenv(LoggerFile),
 			SMTPHost:               os.Getenv(SMTPHost),
+			CacheHost:              os.Getenv(CacheHost),
 		}
 		cfg.SMTPPort, _ = strconv.Atoi(os.Getenv(SMTPPort))
+		cfg.CacheDb, _ = strconv.Atoi(os.Getenv(CacheDb))
 		cfg.CacheDurationMins, _ = strconv.Atoi(os.Getenv(CacheDurationMins))
 	})
 	return &cfg
