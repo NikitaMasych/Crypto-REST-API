@@ -6,7 +6,6 @@ import (
 	"GenesisTask/pkg/domain/models"
 	"log"
 	"strconv"
-	"time"
 
 	"gopkg.in/gomail.v2"
 )
@@ -38,7 +37,7 @@ func (g *GomailSender) SendRateEmails(rate models.CurrencyRate,
 func composeMessage(rate models.CurrencyRate) *gomail.Message {
 	subject := "Currency Rate"
 	pair := rate.GetCurrencyPair()
-	body := pair.GetBase() + "-" + pair.GetQuote() + " rate on " + time.Now().String() + " : " +
+	body := pair.GetBase() + "-" + pair.GetQuote() + " rate on " + rate.GetTimestamp().String() + " : " +
 		strconv.FormatFloat(rate.GetPrice(), 'f', -1, 64)
 
 	msg := gomail.NewMessage()

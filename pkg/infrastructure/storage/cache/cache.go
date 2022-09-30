@@ -10,6 +10,11 @@ import (
 	"github.com/patrickmn/go-cache"
 )
 
+type rateTrait struct {
+	Rate      float64
+	Timestamp time.Time
+}
+
 type GoCache struct {
 	cache *cache.Cache
 }
@@ -22,15 +27,16 @@ func (g *GoCache) AddRateToCache(rate models.CurrencyRate) {
 	existingPeriod := time.Duration(config.Get().CacheDurationMins) * time.Minute
 	pair := rate.GetCurrencyPair()
 	rateAssets := pair.GetBase() + "-" + pair.GetQuote()
-	g.cache.Set(rateAssets, rate.GetPrice(), existingPeriod)
+	g.cache.Set(rateAssets, rateTrait{rate.GetPrice(), rate.GetTimestamp()}, existingPeriod)
 }
 
 func (g *GoCache) GetRateFromCache(pair models.CurrencyPair) (models.CurrencyRate, error) {
 	rateAssets := pair.GetBase() + "-" + pair.GetQuote()
 	rate, present := g.cache.Get(rateAssets)
 	if !present {
-		return *models.NewCurrencyRate(pair, -1), errors.ErrNotPresentInCache
+		return *models.NewCurrencyRate(pair, -1, time.Now()), errors.ErrNotPresentInCache
 	}
-	float64Rate, err := convertInterfaceToFloat64(rate)
-	return *models.NewCurrencyRate(pair, float64Rate), err
+
+	result := rate.(rateTrait)
+	return *models.NewCurrencyRate(pair, result.Rate, result.Timestamp), nil
 }

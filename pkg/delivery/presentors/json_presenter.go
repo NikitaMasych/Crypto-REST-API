@@ -11,7 +11,7 @@ func PresentRateJSON(c *gin.Context, rate models.CurrencyRate, err error) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"description": "Invalid status value"})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"description": rate.GetPrice()})
+		c.JSON(http.StatusOK, gin.H{"rate": rate.GetPrice(), "timestamp": rate.GetTimestamp()})
 	}
 }
 

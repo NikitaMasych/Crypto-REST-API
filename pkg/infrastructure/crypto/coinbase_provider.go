@@ -45,19 +45,20 @@ func (p *CoinbaseProvider) getRate(pair models.CurrencyPair) (models.CurrencyRat
 		config.Get().CoinbaseApiFormatUrl, pair.GetBase(), pair.GetQuote())
 
 	resp, err := resty.R().Get(CoinbaseApiUrl)
+	timestamp := resp.ReceivedAt
 	if err != nil {
-		return *models.NewCurrencyRate(pair, -1), err
+		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 
 	go logger.LogProviderResponse("Coinbase", resp)
 
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
-		return *models.NewCurrencyRate(pair, -1), err
+		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 	rate, err := strconv.ParseFloat(p.Response.Data.Price, 64)
 	if err != nil {
-		return *models.NewCurrencyRate(pair, -1), err
+		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 
-	return *models.NewCurrencyRate(pair, rate), err
+	return *models.NewCurrencyRate(pair, rate, timestamp), err
 }

@@ -43,16 +43,17 @@ func (p *CoinApiProvider) getRate(pair models.CurrencyPair) (models.CurrencyRate
 		cfg.CoinApiFormatURL, pair.GetBase(), pair.GetQuote())
 
 	resp, err := resty.R().SetHeader("X-CoinAPI-Key", cfg.CoinApiKey).Get(CoinApiUrl)
+	timestamp := resp.ReceivedAt
 	if err != nil {
-		return *models.NewCurrencyRate(pair, -1), err
+		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 
 	go logger.LogProviderResponse("CoinApi", resp)
 
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
-		return *models.NewCurrencyRate(pair, -1), err
+		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 	rate := p.Response.Price
 
-	return *models.NewCurrencyRate(pair, rate), err
+	return *models.NewCurrencyRate(pair, rate, timestamp), err
 }

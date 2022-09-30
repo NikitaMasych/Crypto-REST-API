@@ -43,19 +43,20 @@ func (p *BinanceProvider) getRate(pair models.CurrencyPair) (models.CurrencyRate
 		config.Get().BinanceApiFormatUrl, pair.GetBase(), pair.GetQuote())
 
 	resp, err := resty.R().Get(BinanceApiUrl)
+	timestamp := resp.ReceivedAt
 	if err != nil {
-		return *models.NewCurrencyRate(pair, -1), err
+		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 
 	go logger.LogProviderResponse("Binance", resp)
 
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
-		return *models.NewCurrencyRate(pair, -1), err
+		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 	rate, err := strconv.ParseFloat(p.Response.Price, 64)
 	if err != nil {
-		return *models.NewCurrencyRate(pair, -1), err
+		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 
-	return *models.NewCurrencyRate(pair, rate), err
+	return *models.NewCurrencyRate(pair, rate, timestamp), err
 }
