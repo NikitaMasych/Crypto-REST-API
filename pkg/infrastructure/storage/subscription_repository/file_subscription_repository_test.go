@@ -3,7 +3,7 @@ package storage
 import (
 	"GenesisTask/config"
 	"GenesisTask/pkg/domain/models"
-	"GenesisTask/pkg/platform"
+	"GenesisTask/pkg/utils"
 	"os"
 	"strings"
 	"testing"
@@ -19,7 +19,7 @@ func TestThatAddSubscriptionAndIsSavedWorks(t *testing.T) {
 	email := *models.NewEmailAddress(emailString)
 	pair := *models.NewCurrencyPair(base, quote)
 	subscription := *models.NewSubscription(email, pair)
-	platform.EnsureFileExists(config.StorageFile)
+	utils.EnsureFileExists(config.StorageFile)
 
 	subsRepo.AddSubscription(subscription)
 

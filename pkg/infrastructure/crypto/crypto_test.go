@@ -3,7 +3,7 @@ package crypto
 import (
 	"GenesisTask/config"
 	"GenesisTask/pkg/domain/models"
-	"GenesisTask/pkg/platform"
+	"GenesisTask/pkg/utils"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -49,5 +49,5 @@ func TestThatCoinApiProviderReturnsRate(t *testing.T) {
 }
 
 func provideArrange() {
-	platform.EnsureFileExists(config.LoggerFile)
+	utils.EnsureFileExists(config.LoggerFile)
 }
