@@ -19,9 +19,8 @@ func NewGomailSender() application.EmailSender {
 func (g *GomailSender) SendRatesEmail(rates []models.CurrencyRate,
 	email models.EmailAddress) {
 	log.Print(rates)
-	cfg := config.Get()
-	dialer := gomail.NewDialer(cfg.SMTPHost, cfg.SMTPPort,
-		cfg.EmailAddress, cfg.EmailPassword)
+	dialer := gomail.NewDialer(config.SMTPHost, config.SMTPPort,
+		config.EmailAddress, config.EmailPassword)
 
 	msg := composeMessage(rates, email)
 	if err := dialer.DialAndSend(msg); err != nil {
@@ -40,7 +39,7 @@ func composeMessage(rates []models.CurrencyRate, email models.EmailAddress) *gom
 
 	msg := gomail.NewMessage()
 	msg.SetHeader("To", email.ToString())
-	msg.SetHeader("From", config.Get().EmailAddress)
+	msg.SetHeader("From", config.EmailAddress)
 	msg.SetHeader("Subject", subject)
 	msg.SetBody("text/html", "<p style=\"font: 20px Times New Roman, italic\">"+body+"</p>")
 

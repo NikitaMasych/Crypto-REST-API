@@ -7,7 +7,7 @@ import (
 
 type ProvidersChain interface {
 	services.RateService
-	SetNext(*ProvidersChain)
+	SetNext(ProvidersChain)
 }
 
 type Cache interface {

@@ -1,7 +1,6 @@
 package crypto
 
 import (
-	"GenesisTask/config"
 	"GenesisTask/pkg/application"
 	"GenesisTask/pkg/domain/models"
 	"GenesisTask/pkg/infrastructure/logger"
@@ -23,8 +22,8 @@ func NewBinanceProvider() application.ProvidersChain {
 	return &BinanceProvider{}
 }
 
-func (p *BinanceProvider) SetNext(next *application.ProvidersChain) {
-	p.next = next
+func (p *BinanceProvider) SetNext(next application.ProvidersChain) {
+	p.next = &next
 }
 
 func (p *BinanceProvider) GetRate(pair models.CurrencyPair) (models.CurrencyRate, error) {
@@ -40,7 +39,7 @@ func (p *BinanceProvider) GetRate(pair models.CurrencyPair) (models.CurrencyRate
 
 func (p *BinanceProvider) getRate(pair models.CurrencyPair) (models.CurrencyRate, error) {
 	BinanceApiUrl := fmt.Sprintf(
-		config.Get().BinanceApiFormatUrl, pair.GetBase(), pair.GetQuote())
+		BinanceApiFormatUrl, pair.GetBase(), pair.GetQuote())
 
 	resp, err := resty.R().Get(BinanceApiUrl)
 	timestamp := resp.ReceivedAt

@@ -1,4 +1,4 @@
-package cache
+package gocache
 
 import (
 	"GenesisTask/config"
@@ -10,8 +10,8 @@ import (
 )
 
 func TestThatCryptoRateAddGetIsSuccessfull(t *testing.T) {
-	cfg := config.Get()
-	c := NewRedisCache(cfg.CacheHost, cfg.CacheDb, time.Duration(cfg.CacheDurationMins)*time.Minute)
+	cacheDuration := time.Duration(config.CacheDurationMins) * time.Minute
+	c := NewGoCache(cacheDuration)
 	base := "SOL"
 	quote := "USDT"
 	pair := *models.NewCurrencyPair(base, quote)

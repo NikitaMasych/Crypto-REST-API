@@ -5,66 +5,37 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/joho/godotenv"
 )
 
-type Config struct {
-	ServerURL              string
-	BinanceApiFormatUrl    string
-	CoinbaseApiFormatUrl   string
-	CoinApiFormatURL       string
-	CoinApiKey             string
-	CryptoCurrencyProvider string
-	EmailAddress           string
-	EmailPassword          string
-	StorageFile            string
-	LoggerFile             string
-	SMTPHost               string
-	SMTPPort               int
-	CacheHost              string
-	CacheDb                int
-	CacheDurationMins      int
-}
-
 var (
-	cfg  Config
-	once sync.Once
+	ServerUrl         string
+	CoinApiKey        string
+	GenesisProvider   string
+	EmailAddress      string
+	EmailPassword     string
+	StorageFile       string
+	LoggerFile        string
+	SMTPHost          string
+	SMTPPort          int
+	CacheHost         string
+	CacheDb           int
+	CacheDurationMins int
 )
 
-func Get() *Config {
-
-	once.Do(func() {
-		LoadEnv()
-		cfg = Config{
-			ServerURL:              os.Getenv(ServerUrl),
-			BinanceApiFormatUrl:    os.Getenv(BinanceApiFormatUrl),
-			CoinbaseApiFormatUrl:   os.Getenv(CoinbaseApiFormatUrl),
-			CoinApiFormatURL:       os.Getenv(CoinApiFormatURL),
-			CoinApiKey:             os.Getenv(CoinApiKey),
-			CryptoCurrencyProvider: os.Getenv(CryptoCurrencyProvider),
-			EmailAddress:           os.Getenv(EmailAddress),
-			EmailPassword:          os.Getenv(EmailPassword),
-			StorageFile:            os.Getenv(StorageFile),
-			LoggerFile:             os.Getenv(LoggerFile),
-			SMTPHost:               os.Getenv(SMTPHost),
-			CacheHost:              os.Getenv(CacheHost),
-		}
-		cfg.SMTPPort, _ = strconv.Atoi(os.Getenv(SMTPPort))
-		cfg.CacheDb, _ = strconv.Atoi(os.Getenv(CacheDb))
-		cfg.CacheDurationMins, _ = strconv.Atoi(os.Getenv(CacheDurationMins))
-	})
-	return &cfg
+func init() {
+	loadEnv()
+	setupVariables()
 }
 
-func LoadEnv() {
+func loadEnv() {
 	err := godotenv.Load(".env")
 	if err == nil {
 		return
 	}
 	// In case we test from inner directories:
-	max_directory_deep := 5
+	max_directory_deep := 6
 	for i := 1; i != max_directory_deep; i++ {
 		escape_sequence := strings.Repeat("../", i)
 		err = godotenv.Load("./" + escape_sequence + ".env")
@@ -73,4 +44,29 @@ func LoadEnv() {
 		}
 	}
 	log.Fatal(err)
+}
+
+func setupVariables() {
+	var err error
+	ServerUrl = os.Getenv("SERVER_URL")
+	CoinApiKey = os.Getenv("COIN_API_KEY")
+	GenesisProvider = os.Getenv("GENESIS_PROVIDER")
+	EmailAddress = os.Getenv("EMAIL_ADDRESS")
+	EmailPassword = os.Getenv("EMAIL_PASSWORD")
+	StorageFile = os.Getenv("STORAGE_FILE")
+	LoggerFile = os.Getenv("LOGGER_FILE")
+	SMTPHost = os.Getenv("SMTP_HOST")
+	SMTPPort, err = strconv.Atoi(os.Getenv("SMTP_PORT"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	CacheHost = os.Getenv("CACHE_HOST")
+	CacheDb, err = strconv.Atoi(os.Getenv("CACHE_DB"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	CacheDurationMins, err = strconv.Atoi(os.Getenv("CACHE_DURATION_MINS"))
+	if err != nil {
+		log.Fatal(err)
+	}
 }

@@ -49,5 +49,5 @@ func TestThatCoinApiProviderReturnsRate(t *testing.T) {
 }
 
 func provideArrange() {
-	platform.EnsureFileExists(config.Get().LoggerFile)
+	platform.EnsureFileExists(config.LoggerFile)
 }

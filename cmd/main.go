@@ -2,11 +2,11 @@ package main
 
 import (
 	"GenesisTask/config"
-	"GenesisTask/pkg/platform"
+	"GenesisTask/pkg/utils"
 )
 
 func main() {
-	platform.EnsureFileExists(config.Get().LoggerFile)
-	platform.EnsureFileExists(config.Get().StorageFile)
+	utils.EnsureFileExists(config.LoggerFile)
+	utils.EnsureFileExists(config.StorageFile)
 	LaunchEngine()
 }

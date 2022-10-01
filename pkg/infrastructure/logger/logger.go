@@ -10,7 +10,7 @@ import (
 )
 
 func LogProviderResponse(timestamp time.Time, provider string, resp *resty.Response) {
-	loggerPath := config.Get().LoggerFile
+	loggerPath := config.LoggerFile
 	file, err := os.OpenFile(loggerPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)

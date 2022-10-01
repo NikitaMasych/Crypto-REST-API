@@ -16,7 +16,7 @@ type SubscriptionFileRepository struct {
 }
 
 func NewSubscriptionFileRepository() application.SubscriptionStorage {
-	path := config.Get().StorageFile
+	path := config.StorageFile
 	return &SubscriptionFileRepository{path}
 }
 

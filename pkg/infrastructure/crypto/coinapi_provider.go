@@ -22,8 +22,8 @@ func NewCoinApiProvider() application.ProvidersChain {
 	return &CoinApiProvider{}
 }
 
-func (p *CoinApiProvider) SetNext(next *application.ProvidersChain) {
-	p.next = next
+func (p *CoinApiProvider) SetNext(next application.ProvidersChain) {
+	p.next = &next
 }
 
 func (p *CoinApiProvider) GetRate(pair models.CurrencyPair) (models.CurrencyRate, error) {
@@ -38,11 +38,10 @@ func (p *CoinApiProvider) GetRate(pair models.CurrencyPair) (models.CurrencyRate
 }
 
 func (p *CoinApiProvider) getRate(pair models.CurrencyPair) (models.CurrencyRate, error) {
-	cfg := config.Get()
 	CoinApiUrl := fmt.Sprintf(
-		cfg.CoinApiFormatURL, pair.GetBase(), pair.GetQuote())
+		CoinApiFormatUrl, pair.GetBase(), pair.GetQuote())
 
-	resp, err := resty.R().SetHeader("X-CoinAPI-Key", cfg.CoinApiKey).Get(CoinApiUrl)
+	resp, err := resty.R().SetHeader("X-CoinAPI-Key", config.CoinApiKey).Get(CoinApiUrl)
 	timestamp := resp.ReceivedAt
 	if err != nil {
 		return *models.NewCurrencyRate(pair, -1, timestamp), err

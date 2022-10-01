@@ -19,7 +19,7 @@ func TestThatAddSubscriptionAndIsSavedWorks(t *testing.T) {
 	email := *models.NewEmailAddress(emailString)
 	pair := *models.NewCurrencyPair(base, quote)
 	subscription := *models.NewSubscription(email, pair)
-	platform.EnsureFileExists(config.Get().StorageFile)
+	platform.EnsureFileExists(config.StorageFile)
 
 	subsRepo.AddSubscription(subscription)
 
@@ -29,7 +29,7 @@ func TestThatAddSubscriptionAndIsSavedWorks(t *testing.T) {
 }
 
 func cleanup(t *testing.T) {
-	path := config.Get().StorageFile
+	path := config.StorageFile
 	_, err := os.Stat(path)
 	if err != nil {
 		t.Error(err)

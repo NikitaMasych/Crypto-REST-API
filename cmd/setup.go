@@ -6,7 +6,9 @@ import (
 	"GenesisTask/pkg/delivery/handlers"
 	"GenesisTask/pkg/infrastructure/crypto"
 	"GenesisTask/pkg/infrastructure/email"
-	"GenesisTask/pkg/infrastructure/storage/cache"
+
+	//cache "GenesisTask/pkg/infrastructure/storage/cache/redis"
+	cache "GenesisTask/pkg/infrastructure/storage/cache/go-cache"
 	storage "GenesisTask/pkg/infrastructure/storage/subscription_repository"
 	"time"
 
@@ -18,7 +20,7 @@ func LaunchEngine() {
 	router := gin.Default()
 	handlers := createHandlers()
 	initRoutes(router, handlers)
-	router.Run(config.Get().ServerURL)
+	router.Run(config.ServerUrl)
 }
 
 func initRoutes(router *gin.Engine, h *handlers.Handlers) {
@@ -28,11 +30,12 @@ func initRoutes(router *gin.Engine, h *handlers.Handlers) {
 }
 
 func createHandlers() (h *handlers.Handlers) {
-	cfg := config.Get()
-
 	providersChain := crypto.NewProvidersChain()
 	emailSender := email.NewGomailSender()
-	cache := cache.NewRedisCache(cfg.CacheHost, cfg.CacheDb, time.Duration(cfg.CacheDurationMins)*time.Minute)
+	cacheDuration := time.Duration(config.CacheDurationMins) * time.Minute
+	// cache := cache.NewRedisCache(config.CacheHost, config.CacheDb, cacheDuration)
+	// go-cache is useful for local launching on Windows
+	cache := cache.NewGoCache(cacheDuration)
 	emailAddressesStorage := storage.NewSubscriptionFileRepository()
 
 	r1 := application.NewRateRepository(*providersChain, cache)

@@ -1,4 +1,4 @@
-package cache
+package redis
 
 import (
 	"GenesisTask/pkg/application"
@@ -35,13 +35,13 @@ func getRedisClient(host string, db int) *redis.Client {
 
 func (r *redisCache) AddRateToCache(rate models.CurrencyRate) {
 	pair := rate.GetCurrencyPair()
-	rateAssets := pair.GetBase() + "-" + pair.GetQuote()
+	rateAssets := pair.ToString()
 	rateJson, _ := json.Marshal(rateTrait{rate.GetPrice(), rate.GetTimestamp()})
 	r.client.Set(context.Background(), rateAssets, rateJson, r.expirationTime)
 }
 
 func (r *redisCache) GetRateFromCache(pair models.CurrencyPair) (models.CurrencyRate, error) {
-	rateAssets := pair.GetBase() + "-" + pair.GetQuote()
+	rateAssets := pair.ToString()
 	rateBytes, err := r.client.Get(context.Background(), rateAssets).Bytes()
 	if errors.Is(err, redis.Nil) {
 		return *models.NewCurrencyRate(pair, -1, time.Now()), custom.ErrNotPresentInCache

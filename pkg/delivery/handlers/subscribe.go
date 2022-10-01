@@ -34,10 +34,10 @@ func (h *SubscribeHandler) Subscribe(c *gin.Context) {
 	user := models.NewUser(*address, []models.CurrencyPair{*pair})
 	err := h.subscriptionRepository.Subscribe(*user)
 	if err == nil {
-		presentors.PresentUserSubscriptionJSON(c)
+		presentors.PresentSubscriptionJSON(c)
 	} else {
 		if errors.Is(err, custom.ErrAlreadySubscribed) {
-			presentors.PresentUserConflictJSON(c)
+			presentors.PresentSubscriptionConflictJSON(c)
 		} else {
 			presentors.PresentErrorJSON(c)
 		}
