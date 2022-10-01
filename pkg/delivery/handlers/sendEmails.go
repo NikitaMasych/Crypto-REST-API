@@ -15,8 +15,8 @@ func NewSendRateEmailsHandler(r application.EmailSenderRepository) *SendRateEmai
 	return &SendRateEmailsHandler{r}
 }
 
-func (h *SendRateEmailsHandler) SendRateEmails(c *gin.Context) {
-	err := h.emailSenderRepository.SendRateEmails()
+func (h *SendRateEmailsHandler) SendEmailsToUsers(c *gin.Context) {
+	err := h.emailSenderRepository.SendEmailsToUsers()
 	if err != nil {
 		presentors.PresentErrorJSON(c)
 	} else {

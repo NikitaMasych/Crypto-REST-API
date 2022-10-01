@@ -12,9 +12,10 @@ import (
 func TestThatCryptoRateAddGetIsSuccessfull(t *testing.T) {
 	cfg := config.Get()
 	c := NewRedisCache(cfg.CacheHost, cfg.CacheDb, time.Duration(cfg.CacheDurationMins)*time.Minute)
-	s := config.NewConfigPairSource()
-	pair := s.GetPair()
-	expectedRate := 10.213
+	base := "SOL"
+	quote := "USDT"
+	pair := *models.NewCurrencyPair(base, quote)
+	expectedRate := 35.323
 	timestamp := time.Now()
 	rate := models.NewCurrencyRate(pair, expectedRate, timestamp)
 

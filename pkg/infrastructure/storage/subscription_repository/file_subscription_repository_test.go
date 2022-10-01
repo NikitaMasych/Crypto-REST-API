@@ -11,15 +11,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestThatAddEmailAndIsSavedWorks(t *testing.T) {
-	userRepo := NewFileRepository()
-	email := "plainemail@gmail.com"
-	address := models.NewEmailAddress(email)
+func TestThatAddSubscriptionAndIsSavedWorks(t *testing.T) {
+	subsRepo := NewSubscriptionFileRepository()
+	emailString := "plainemail@gmail.com"
+	base := "BTC"
+	quote := "UAH"
+	email := *models.NewEmailAddress(emailString)
+	pair := *models.NewCurrencyPair(base, quote)
+	subscription := *models.NewSubscription(email, pair)
 	platform.EnsureFileExists(config.Get().StorageFile)
 
-	userRepo.AddEmail(*address)
+	subsRepo.AddSubscription(subscription)
 
-	assert.Equal(t, userRepo.IsSaved(*address), true)
+	assert.Equal(t, subsRepo.IsSaved(subscription), true)
 
 	cleanup(t)
 }

@@ -16,8 +16,6 @@ type Config struct {
 	CoinbaseApiFormatUrl   string
 	CoinApiFormatURL       string
 	CoinApiKey             string
-	BaseCurrency           string
-	QuoteCurrency          string
 	CryptoCurrencyProvider string
 	EmailAddress           string
 	EmailPassword          string
@@ -45,8 +43,6 @@ func Get() *Config {
 			CoinbaseApiFormatUrl:   os.Getenv(CoinbaseApiFormatUrl),
 			CoinApiFormatURL:       os.Getenv(CoinApiFormatURL),
 			CoinApiKey:             os.Getenv(CoinApiKey),
-			BaseCurrency:           os.Getenv(BaseCurrency),
-			QuoteCurrency:          os.Getenv(QuoteCurrency),
 			CryptoCurrencyProvider: os.Getenv(CryptoCurrencyProvider),
 			EmailAddress:           os.Getenv(EmailAddress),
 			EmailPassword:          os.Getenv(EmailPassword),

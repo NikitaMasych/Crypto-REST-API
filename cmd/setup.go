@@ -7,7 +7,7 @@ import (
 	"GenesisTask/pkg/infrastructure/crypto"
 	"GenesisTask/pkg/infrastructure/email"
 	"GenesisTask/pkg/infrastructure/storage/cache"
-	storage "GenesisTask/pkg/infrastructure/storage/emails_repository"
+	storage "GenesisTask/pkg/infrastructure/storage/subscription_repository"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -22,9 +22,9 @@ func LaunchEngine() {
 }
 
 func initRoutes(router *gin.Engine, h *handlers.Handlers) {
-	router.GET("/api/rate", h.GetRate)
+	router.POST("/api/rate", h.GetRate)
 	router.POST("/api/subscribe", h.Subscribe)
-	router.POST("/api/sendEmails", h.SendRateEmails)
+	router.POST("/api/sendEmails", h.SendEmailsToUsers)
 }
 
 func createHandlers() (h *handlers.Handlers) {
@@ -33,14 +33,13 @@ func createHandlers() (h *handlers.Handlers) {
 	providersChain := crypto.NewProvidersChain()
 	emailSender := email.NewGomailSender()
 	cache := cache.NewRedisCache(cfg.CacheHost, cfg.CacheDb, time.Duration(cfg.CacheDurationMins)*time.Minute)
-	emailAddressesStorage := storage.NewFileRepository()
-	pairSource := config.NewConfigPairSource()
+	emailAddressesStorage := storage.NewSubscriptionFileRepository()
 
 	r1 := application.NewRateRepository(*providersChain, cache)
 	r2 := application.NewSubscriptionRepository(emailAddressesStorage)
-	r3 := application.NewEmailSenderRepository(emailAddressesStorage, emailSender, *r1, pairSource)
+	r3 := application.NewEmailSenderRepository(emailAddressesStorage, emailSender, *r1)
 
-	h1 := handlers.NewRateHandler(r1, &pairSource)
+	h1 := handlers.NewRateHandler(r1)
 	h2 := handlers.NewSubscribeHandler(*r2)
 	h3 := handlers.NewSendRateEmailsHandler(*r3)
 

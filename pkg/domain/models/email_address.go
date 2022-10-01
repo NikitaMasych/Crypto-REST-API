@@ -8,6 +8,6 @@ func NewEmailAddress(address string) *EmailAddress {
 	return &EmailAddress{address}
 }
 
-func (e *EmailAddress) GetAddress() string {
+func (e *EmailAddress) ToString() string {
 	return e.address
 }

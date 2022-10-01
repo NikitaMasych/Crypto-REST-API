@@ -16,3 +16,7 @@ func (p CurrencyPair) GetBase() string {
 func (p CurrencyPair) GetQuote() string {
 	return p.quote
 }
+
+func (p CurrencyPair) ToString() string {
+	return p.base + "-" + p.quote
+}
