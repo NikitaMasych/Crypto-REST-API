@@ -23,67 +23,69 @@ $ docker run -d -p 8080:8080 genapp
 ```
 .
 ├── cmd
-│   ├── main.go
-│   └── setup.go
+│   ├── main.go
+│   └── setup.go
 ├── config
-│   ├── config.go
-│   ├── config_pair_source.go
-│   ├── config_test.go
-│   └── env_names.go
+│   ├── config.go
+│   └── config_test.go
 ├── Dockerfile
 ├── docs
-│   ├── Architecture.png
-│   └── Assignment_specification.pdf
+│   └── Architecture.png
 ├── go.mod
 ├── go.sum
 ├── pkg
-│   ├── application
-│   │   ├── contracts.go
-│   │   ├── email_ucase.go
-│   │   ├── rate_ucase.go
-│   │   └── subscription_ucase.go
-│   ├── delivery
-│   │   ├── handlers
-│   │   │   ├── handlers.go
-│   │   │   ├── rate.go
-│   │   │   ├── sendEmails.go
-│   │   │   └── subscribe.go
-│   │   └── presentors
-│   │       └── json_presenter.go
-│   ├── domain
-│   │   ├── models
-│   │   │   ├── currency_pair.go
-│   │   │   ├── currency_rate.go
-│   │   │   ├── email_address.go
-│   │   │   └── user.go
-│   │   └── services
-│   │       ├── email_service.go
-│   │       ├── rate_service.go
-│   │       └── subscription_service.go
-│   ├── errors
-│   │   └── errors.go
-│   ├── infrastructure
-│   │   ├── crypto
-│   │   │   ├── binance_provider.go
-│   │   │   ├── coinapi_provider.go
-│   │   │   ├── coinbase_provider.go
-│   │   │   ├── crypto_test.go
-│   │   │   └── providers_chain.go
-│   │   ├── email
-│   │   │   └── email_sender.go
-│   │   ├── logger
-│   │   │   └── logger.go
-│   │   └── storage
-│   │       ├── cache
-│   │       │   ├── cache.go
-│   │       │   ├── cache_test.go
-│   │       │   └── utils.go
-│   │       └── emails_repository
-│   │           ├── file_repository.go
-│   │           └── file_repository_test.go
-│   └── platform
-│       ├── file_assurance.go
-│       └── platform_test.go
+│   ├── application
+│   │   ├── contracts.go
+│   │   ├── email_ucase.go
+│   │   ├── rate_ucase.go
+│   │   └── subscription_ucase.go
+│   ├── delivery
+│   │   ├── handlers
+│   │   │   ├── handlers.go
+│   │   │   ├── rate.go
+│   │   │   ├── sendEmails.go
+│   │   │   └── subscribe.go
+│   │   └── presentors
+│   │       └── json_presenter.go
+│   ├── domain
+│   │   ├── models
+│   │   │   ├── currency_pair.go
+│   │   │   ├── currency_rate.go
+│   │   │   ├── email_address.go
+│   │   │   ├── subscription.go
+│   │   │   └── user.go
+│   │   └── services
+│   │       ├── email_service.go
+│   │       ├── rate_service.go
+│   │       └── subscription_service.go
+│   ├── errors
+│   │   └── errors.go
+│   ├── infrastructure
+│   │   ├── crypto
+│   │   │   ├── binance_provider.go
+│   │   │   ├── coinapi_provider.go
+│   │   │   ├── coinbase_provider.go
+│   │   │   ├── crypto_test.go
+│   │   │   ├── providers_chain.go
+│   │   │   └── providers_urls.go
+│   │   ├── email
+│   │   │   └── email_sender.go
+│   │   ├── logger
+│   │   │   └── logger.go
+│   │   └── storage
+│   │       ├── cache
+│   │       │   ├── go-cache
+│   │       │   │   ├── cache.go
+│   │       │   │   └── cache_test.go
+│   │       │   └── redis
+│   │       │       ├── cache.go
+│   │       │       └── cache_test.go
+│   │       └── subscription_repository
+│   │           ├── file_subscription_repository.go
+│   │           └── file_subscription_repository_test.go
+│   └── utils
+│       ├── file_assurance.go
+│       └── utils_test.go
 ├── README.md
 └── tests
     └── architectural
