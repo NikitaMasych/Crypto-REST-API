@@ -2,7 +2,8 @@ package crypto
 
 import (
 	"GenesisTask/config"
-	"GenesisTask/pkg/platform"
+	"GenesisTask/pkg/domain/models"
+	"GenesisTask/pkg/utils"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,8 +11,9 @@ import (
 
 func TestThatBinanceProviderReturnsRate(t *testing.T) {
 	p := NewBinanceProvider()
-	s := config.NewConfigPairSource()
-	pair := s.GetPair()
+	base := "SOL"
+	quote := "USDT"
+	pair := *models.NewCurrencyPair(base, quote)
 	provideArrange()
 
 	rate, err := p.GetRate(pair)
@@ -22,8 +24,9 @@ func TestThatBinanceProviderReturnsRate(t *testing.T) {
 
 func TestThatCoinbaseProviderReturnsRate(t *testing.T) {
 	p := NewCoinbaseProvider()
-	s := config.NewConfigPairSource()
-	pair := s.GetPair()
+	base := "SOL"
+	quote := "USDT"
+	pair := *models.NewCurrencyPair(base, quote)
 	provideArrange()
 
 	rate, err := p.GetRate(pair)
@@ -34,8 +37,9 @@ func TestThatCoinbaseProviderReturnsRate(t *testing.T) {
 
 func TestThatCoinApiProviderReturnsRate(t *testing.T) {
 	p := NewCoinApiProvider()
-	s := config.NewConfigPairSource()
-	pair := s.GetPair()
+	base := "SOL"
+	quote := "USDT"
+	pair := *models.NewCurrencyPair(base, quote)
 	provideArrange()
 
 	rate, err := p.GetRate(pair)
@@ -45,5 +49,5 @@ func TestThatCoinApiProviderReturnsRate(t *testing.T) {
 }
 
 func provideArrange() {
-	platform.EnsureFileExists(config.Get().LoggerFile)
+	utils.EnsureFileExists(config.LoggerFile)
 }

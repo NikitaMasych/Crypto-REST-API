@@ -7,7 +7,7 @@ import (
 
 type ProvidersChain interface {
 	services.RateService
-	SetNext(*ProvidersChain)
+	SetNext(ProvidersChain)
 }
 
 type Cache interface {
@@ -15,16 +15,12 @@ type Cache interface {
 	GetRateFromCache(models.CurrencyPair) (models.CurrencyRate, error)
 }
 
-type EmailAddressesStorage interface {
-	AddEmail(models.EmailAddress) error
-	IsSaved(models.EmailAddress) bool
-	GetAll() []models.EmailAddress
+type SubscriptionStorage interface {
+	AddSubscription(models.Subscription) error
+	IsSaved(models.Subscription) bool
+	GetAll() []models.Subscription
 }
 
 type EmailSender interface {
-	SendRateEmails(models.CurrencyRate, []models.EmailAddress)
-}
-
-type PairSource interface {
-	GetPair() models.CurrencyPair
+	SendRatesEmail([]models.CurrencyRate, models.EmailAddress)
 }

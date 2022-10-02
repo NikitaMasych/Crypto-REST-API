@@ -6,17 +6,23 @@ import (
 )
 
 type SubscriptionRepository struct {
-	storage EmailAddressesStorage
+	storage SubscriptionStorage
 }
 
-func NewSubscriptionRepository(storage EmailAddressesStorage) *SubscriptionRepository {
+func NewSubscriptionRepository(storage SubscriptionStorage) *SubscriptionRepository {
 	return &SubscriptionRepository{storage}
 }
 
 func (r *SubscriptionRepository) Subscribe(user models.User) error {
-	if r.storage.IsSaved(*user.GetEmailAddress()) {
-		return errors.ErrAlreadySubscribed
+	for _, pair := range user.SubscribedPairs {
+		subscription := models.NewSubscription(*user.GetEmailAddress(), pair)
+		if r.storage.IsSaved(*subscription) {
+			return errors.ErrAlreadySubscribed
+		} else {
+			if err := r.storage.AddSubscription(*subscription); err != nil {
+				return err
+			}
+		}
 	}
-	err := r.storage.AddEmail(*user.GetEmailAddress())
-	return err
+	return nil
 }
