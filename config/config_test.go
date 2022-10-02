@@ -20,4 +20,6 @@ func TestIsConfigPresent(t *testing.T) {
 	require.NotEmpty(t, CacheHost)
 	assert.NotEqual(t, CacheDb, 0)
 	assert.NotEqual(t, CacheDurationMins, 0)
+	require.NotEmpty(t, CurrencyPairSeparator)
+	require.NotEmpty(t, EmailAddressSeparator)
 }

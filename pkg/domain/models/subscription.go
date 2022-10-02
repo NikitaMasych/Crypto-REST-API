@@ -1,5 +1,9 @@
 package models
 
+import (
+	"GenesisTask/config"
+)
+
 type Subscription struct {
 	EmailAddress
 	CurrencyPair
@@ -18,5 +22,6 @@ func (s *Subscription) GetCurrencyPair() *CurrencyPair {
 }
 
 func (s *Subscription) ToString() string {
-	return s.GetEmailAddress().ToString() + ":" + s.GetCurrencyPair().ToString()
+	return s.GetEmailAddress().ToString() + config.EmailAddressSeparator +
+		s.GetCurrencyPair().ToString()
 }

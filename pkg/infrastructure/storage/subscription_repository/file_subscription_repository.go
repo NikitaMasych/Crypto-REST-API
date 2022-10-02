@@ -86,17 +86,17 @@ func (r *SubscriptionFileRepository) GetAll() []models.Subscription {
 }
 
 func ComposeSubscription(line string) (models.Subscription, error) {
-	columnIndex := strings.Index(line, ":")
-	dashIndex := strings.Index(line, "-")
-	if columnIndex == -1 || dashIndex == -1 {
+	emailSepIndex := strings.Index(line, config.EmailAddressSeparator)
+	currencySepIndex := strings.Index(line, config.CurrencyPairSeparator)
+	if emailSepIndex == -1 || currencySepIndex == -1 {
 		emptyEmail := *models.NewEmailAddress("")
 		emptyPair := *models.NewCurrencyPair("", "")
 		emptySubscription := *models.NewSubscription(emptyEmail, emptyPair)
 		return emptySubscription, errors.ErrCouldNotMarshallSubscription
 	}
-	email := models.NewEmailAddress(line[:columnIndex])
-	base := line[columnIndex+1 : dashIndex]
-	quote := line[dashIndex+1:]
+	email := models.NewEmailAddress(line[:emailSepIndex])
+	base := line[emailSepIndex+1 : currencySepIndex]
+	quote := line[currencySepIndex+1:]
 	pair := models.NewCurrencyPair(base, quote)
 	return *models.NewSubscription(*email, *pair), nil
 }

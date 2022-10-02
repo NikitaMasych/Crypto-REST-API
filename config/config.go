@@ -10,18 +10,20 @@ import (
 )
 
 var (
-	ServerUrl         string
-	CoinApiKey        string
-	GenesisProvider   string
-	EmailAddress      string
-	EmailPassword     string
-	StorageFile       string
-	LoggerFile        string
-	SMTPHost          string
-	SMTPPort          int
-	CacheHost         string
-	CacheDb           int
-	CacheDurationMins int
+	ServerUrl             string
+	CoinApiKey            string
+	GenesisProvider       string
+	EmailAddress          string
+	EmailPassword         string
+	StorageFile           string
+	LoggerFile            string
+	SMTPHost              string
+	SMTPPort              int
+	CacheHost             string
+	CacheDb               int
+	CacheDurationMins     int
+	CurrencyPairSeparator string
+	EmailAddressSeparator string
 )
 
 func init() {
@@ -69,4 +71,6 @@ func setupVariables() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	CurrencyPairSeparator = "-"
+	EmailAddressSeparator = ":"
 }

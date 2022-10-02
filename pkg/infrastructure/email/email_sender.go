@@ -50,7 +50,8 @@ func composeBody(rates []models.CurrencyRate) string {
 	var body string
 	for _, rate := range rates {
 		pair := rate.GetCurrencyPair()
-		rateInfo := pair.GetBase() + "-" + pair.GetQuote() + " rate on " + rate.GetTimestamp().String() + " : " +
+		rateInfo := pair.GetBase() + config.CurrencyPairSeparator + pair.GetQuote() +
+			" rate on " + rate.GetTimestamp().String() + " : " +
 			strconv.FormatFloat(rate.GetPrice(), 'f', -1, 64)
 		body += rateInfo + "<br />"
 	}

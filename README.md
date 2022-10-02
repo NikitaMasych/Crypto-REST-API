@@ -17,7 +17,7 @@ $ docker run -d -p 8080:8080 genapp
 ```
 
 # Project architecture:
-![http://url/to/img.png](https://github.com/GenesisEducationKyiv/hw1-se-school_2022-code-review-NikitaMasych/blob/main/docs/Architecture.png)
+![http://url/to/img.png](https://github.com/GenesisEducationKyiv/hw1-se-school_2022-code-review-NikitaMasych/blob/hw6/docs/Architecture.png)
 
 # Project structure
 ```

@@ -6,5 +6,5 @@ var (
 	ErrNotPresentInCache            = errors.New("rate is not present in cache")
 	ErrIsNotFloat64                 = errors.New("can't convert to float64")
 	ErrAlreadySubscribed            = errors.New("email address is already subscribed")
-	ErrCouldNotMarshallSubscription = errors.New("unable to find column/dash separator")
+	ErrCouldNotMarshallSubscription = errors.New("unable to find separator")
 )

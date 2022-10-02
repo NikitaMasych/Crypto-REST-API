@@ -1,5 +1,7 @@
 package models
 
+import "GenesisTask/config"
+
 type CurrencyPair struct {
 	base  string
 	quote string
@@ -18,5 +20,5 @@ func (p CurrencyPair) GetQuote() string {
 }
 
 func (p CurrencyPair) ToString() string {
-	return p.base + "-" + p.quote
+	return p.base + config.CurrencyPairSeparator + p.quote
 }
