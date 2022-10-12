@@ -33,6 +33,7 @@ func (p *CoinbaseProvider) GetRate(pair models.CurrencyPair) (models.CurrencyRat
 		if p.next == nil {
 			return rate, err
 		}
+		logger.LogDebug("Calling next provider in the chain")
 		return (*p.next).GetRate(pair)
 	}
 	return rate, err
@@ -42,12 +43,13 @@ func (p *CoinbaseProvider) getRate(pair models.CurrencyPair) (models.CurrencyRat
 	CoinbaseApiUrl := fmt.Sprintf(
 		CoinbaseApiFormatUrl, pair.GetBase(), pair.GetQuote())
 	resp, err := resty.R().Get(CoinbaseApiUrl)
+	logger.LogDebug("Requested from " + CoinbaseApiUrl)
 	timestamp := resp.ReceivedAt
 	if err != nil {
 		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 
-	go logger.LogInfo(ComposeProviderResponseLog(timestamp, "Coinbase", resp))
+	go logger.LogDebug(ComposeProviderResponseLog(timestamp, "Coinbase", resp))
 
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
 		return *models.NewCurrencyRate(pair, -1, timestamp), err

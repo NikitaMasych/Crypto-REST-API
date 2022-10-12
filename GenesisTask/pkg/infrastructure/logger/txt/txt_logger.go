@@ -1,8 +1,9 @@
-package logger
+package txtlogger
 
 import (
+	"GenesisTask/config"
 	"GenesisTask/pkg/application"
-	logger "GenesisTask/pkg/infrastructure/logger/common"
+	"GenesisTask/pkg/infrastructure/logger/logtypes"
 	"GenesisTask/pkg/utils"
 	"fmt"
 	"log"
@@ -17,6 +18,14 @@ type LoggerFiles struct {
 
 func NewLoggerFiles(d, e, i string) LoggerFiles {
 	return LoggerFiles{d, e, i}
+}
+
+func CreateTxtLoggerWithConfigSpecs() application.Logger {
+	loggerFiles := NewLoggerFiles(config.DebugLogFile,
+		config.ErrorsLogFile, config.InfoLogFile)
+	EnsureLogFilesExist(loggerFiles)
+	logger := NewTxtLogger(loggerFiles)
+	return logger
 }
 
 func EnsureLogFilesExist(f LoggerFiles) {
@@ -41,7 +50,7 @@ func (l *TxtLogger) LogDebug(v ...any) {
 	defer file.Close()
 	log.SetOutput(file)
 
-	log.Println(logger.Debug, fmt.Sprint(v))
+	log.Println(logtypes.Debug, fmt.Sprint(v))
 }
 
 func (l *TxtLogger) LogError(v ...any) {
@@ -52,7 +61,7 @@ func (l *TxtLogger) LogError(v ...any) {
 	defer file.Close()
 	log.SetOutput(file)
 
-	log.Println(logger.Error, fmt.Sprint(v))
+	log.Println(logtypes.Error, fmt.Sprint(v))
 }
 
 func (l *TxtLogger) LogInfo(v ...any) {
@@ -63,5 +72,5 @@ func (l *TxtLogger) LogInfo(v ...any) {
 	defer file.Close()
 	log.SetOutput(file)
 
-	log.Println(logger.Info, fmt.Sprint(v))
+	log.Println(logtypes.Info, fmt.Sprint(v))
 }

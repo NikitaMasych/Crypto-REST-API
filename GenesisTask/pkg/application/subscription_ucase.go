@@ -22,6 +22,7 @@ func (r *SubscriptionRepository) Subscribe(user models.User) error {
 			r.logger.LogError(errors.ErrAlreadySubscribed)
 			return errors.ErrAlreadySubscribed
 		} else {
+			r.logger.LogDebug("Adding " + subscription.ToString() + " subscription")
 			if err := r.storage.AddSubscription(*subscription); err != nil {
 				r.logger.LogError(err)
 				return err

@@ -3,6 +3,7 @@ package redis
 import (
 	"GenesisTask/config"
 	"GenesisTask/pkg/domain/models"
+	"os"
 	"testing"
 	"time"
 
@@ -10,7 +11,8 @@ import (
 )
 
 func TestThatCryptoRateAddGetIsSuccessfull(t *testing.T) {
-	c := NewRedisCache(config.CacheHost, config.CacheDb,
+	os.Setenv("REDIS_CACHE_HOST", "redis-cache:6379")
+	c := NewRedisCache(config.CacheDb,
 		time.Duration(config.CacheDurationMins)*time.Minute)
 	base := "SOL"
 	quote := "USDT"

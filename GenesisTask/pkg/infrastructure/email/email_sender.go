@@ -4,27 +4,33 @@ import (
 	"GenesisTask/config"
 	"GenesisTask/pkg/application"
 	"GenesisTask/pkg/domain/models"
-	"log"
+	"fmt"
+	"os"
 	"strconv"
 
 	"gopkg.in/gomail.v2"
 )
 
-type GomailSender struct{}
+type GomailSender struct {
+	logger application.Logger
+}
 
-func NewGomailSender() application.EmailSender {
-	return &GomailSender{}
+func NewGomailSender(logger application.Logger) application.EmailSender {
+	return &GomailSender{logger}
 }
 
 func (g *GomailSender) SendRatesEmail(rates []models.CurrencyRate,
 	email models.EmailAddress) {
-	log.Print(rates)
+
 	dialer := gomail.NewDialer(config.SMTPHost, config.SMTPPort,
 		config.EmailAddress, config.EmailPassword)
-
+	g.logger.LogDebug(fmt.Sprintf("Initialized new gomail dialer: {Host: %s, Port: %d}",
+		config.SMTPHost, config.SMTPPort))
 	msg := composeMessage(rates, email)
+	g.logger.LogInfo("Message composed")
 	if err := dialer.DialAndSend(msg); err != nil {
-		log.Fatal(err)
+		g.logger.LogError(err)
+		os.Exit(1)
 	}
 }
 

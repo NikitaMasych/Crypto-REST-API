@@ -1,12 +1,12 @@
-package logger
+package rabbitmqlogger
 
 import (
 	"GenesisTask/pkg/application"
-	log_types "GenesisTask/pkg/infrastructure/logger/common"
+	"GenesisTask/pkg/infrastructure/logger/logtypes"
+	"log"
 	"os"
 
 	"fmt"
-	"log"
 
 	"github.com/streadway/amqp"
 )
@@ -26,9 +26,9 @@ func NewRabbitMQLogger() application.Logger {
 	if err != nil {
 		log.Fatal(err)
 	}
-	declareQueue(channel, log_types.Debug)
-	declareQueue(channel, log_types.Error)
-	declareQueue(channel, log_types.Info)
+	declareQueue(channel, logtypes.Debug)
+	declareQueue(channel, logtypes.Error)
+	declareQueue(channel, logtypes.Info)
 
 	return &RabbitMQLogger{connection, channel}
 }
@@ -53,15 +53,15 @@ func declareQueue(channel *amqp.Channel, name string) {
 }
 
 func (l *RabbitMQLogger) LogDebug(v ...any) {
-	l.publishMessage(log_types.Debug, fmt.Sprint(v))
+	l.publishMessage(logtypes.Debug, fmt.Sprint(v))
 }
 
 func (l *RabbitMQLogger) LogError(v ...any) {
-	l.publishMessage(log_types.Error, fmt.Sprint(v))
+	l.publishMessage(logtypes.Error, fmt.Sprint(v))
 }
 
 func (l *RabbitMQLogger) LogInfo(v ...any) {
-	l.publishMessage(log_types.Info, fmt.Sprint(v))
+	l.publishMessage(logtypes.Info, fmt.Sprint(v))
 }
 
 func (l *RabbitMQLogger) publishMessage(logType string, logMsg string) {

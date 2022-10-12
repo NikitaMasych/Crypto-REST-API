@@ -31,6 +31,7 @@ func (p *CoinApiProvider) GetRate(pair models.CurrencyPair) (models.CurrencyRate
 		if p.next == nil {
 			return rate, err
 		}
+		logger.LogDebug("Calling next provider in the chain")
 		return (*p.next).GetRate(pair)
 	}
 	return rate, err
@@ -41,12 +42,13 @@ func (p *CoinApiProvider) getRate(pair models.CurrencyPair) (models.CurrencyRate
 		CoinApiFormatUrl, pair.GetBase(), pair.GetQuote())
 
 	resp, err := resty.R().SetHeader("X-CoinAPI-Key", config.CoinApiKey).Get(CoinApiUrl)
+	logger.LogDebug("Requested from " + CoinApiUrl)
 	timestamp := resp.ReceivedAt
 	if err != nil {
 		return *models.NewCurrencyRate(pair, -1, timestamp), err
 	}
 
-	go logger.LogInfo(ComposeProviderResponseLog(timestamp, "CoinApi", resp))
+	go logger.LogDebug(ComposeProviderResponseLog(timestamp, "CoinApi", resp))
 
 	if err := json.Unmarshal(resp.Body, &p.Response); err != nil {
 		return *models.NewCurrencyRate(pair, -1, timestamp), err

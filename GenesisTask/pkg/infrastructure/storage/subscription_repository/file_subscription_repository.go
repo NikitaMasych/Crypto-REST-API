@@ -6,26 +6,31 @@ import (
 	"GenesisTask/pkg/domain/models"
 	"GenesisTask/pkg/errors"
 	"bufio"
-	"log"
 	"os"
 	"strings"
 )
 
 type SubscriptionFileRepository struct {
-	path string
+	path   string
+	logger application.Logger
 }
 
-func NewSubscriptionFileRepository() application.SubscriptionStorage {
+func NewSubscriptionFileRepository(logger application.Logger) application.SubscriptionStorage {
 	path := config.StorageFile
-	return &SubscriptionFileRepository{path}
+	return &SubscriptionFileRepository{path, logger}
 }
 
 func (r *SubscriptionFileRepository) IsSaved(subscription models.Subscription) bool {
 	file, err := os.OpenFile(r.path, os.O_RDONLY, 0644)
 	if err != nil {
-		log.Fatal(err)
+		r.logger.LogError(err)
+		os.Exit(1)
 	}
-	defer file.Close()
+	r.logger.LogDebug("Opened storage file: " + r.path)
+	defer func() {
+		file.Close()
+		r.logger.LogDebug("Closed storage file: " + r.path)
+	}()
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -35,7 +40,8 @@ func (r *SubscriptionFileRepository) IsSaved(subscription models.Subscription) b
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		r.logger.LogError(err)
+		os.Exit(1)
 	}
 
 	return false
@@ -46,9 +52,13 @@ func (r *SubscriptionFileRepository) AddSubscription(subscription models.Subscri
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	r.logger.LogDebug("Opened storage file: " + r.path)
+	defer func() {
+		file.Close()
+		r.logger.LogDebug("Closed storage file: " + r.path)
+	}()
 
-	_, err = file.WriteString(subscription.ToString() + "\n")
+	_, err = file.WriteString(subscription.ToString())
 	if err != nil {
 		return err
 	}
@@ -63,9 +73,14 @@ func (r *SubscriptionFileRepository) AddSubscription(subscription models.Subscri
 func (r *SubscriptionFileRepository) GetAll() []models.Subscription {
 	file, err := os.OpenFile(r.path, os.O_RDONLY, 0644)
 	if err != nil {
-		log.Fatal(err)
+		r.logger.LogError(err)
+		os.Exit(1)
 	}
-	defer file.Close()
+	r.logger.LogDebug("Opened storage file: " + r.path)
+	defer func() {
+		file.Close()
+		r.logger.LogDebug("Closed storage file: " + r.path)
+	}()
 
 	scanner := bufio.NewScanner(file)
 	var subscriptions []models.Subscription
@@ -73,13 +88,15 @@ func (r *SubscriptionFileRepository) GetAll() []models.Subscription {
 		line := scanner.Text()
 		subscription, err := ComposeSubscription(line)
 		if err != nil {
-			log.Fatal(err)
+			r.logger.LogError(err)
+			os.Exit(1)
 		}
 		subscriptions = append(subscriptions, subscription)
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		r.logger.LogError(err)
+		os.Exit(1)
 	}
 
 	return subscriptions

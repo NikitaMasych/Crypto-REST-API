@@ -19,7 +19,6 @@ func TestIsConfigPresent(t *testing.T) {
 	require.NotEmpty(t, InfoLogFile)
 	require.NotEmpty(t, SMTPHost)
 	assert.NotEqual(t, SMTPPort, 0)
-	require.NotEmpty(t, CacheHost)
 	assert.NotEqual(t, CacheDb, 0)
 	assert.NotEqual(t, CacheDurationMins, 0)
 	require.NotEmpty(t, CurrencyPairSeparator)

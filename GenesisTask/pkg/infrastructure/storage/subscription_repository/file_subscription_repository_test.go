@@ -3,6 +3,7 @@ package storage
 import (
 	"GenesisTask/config"
 	"GenesisTask/pkg/domain/models"
+	"GenesisTask/pkg/infrastructure/logger"
 	"GenesisTask/pkg/utils"
 	"os"
 	"strings"
@@ -12,7 +13,8 @@ import (
 )
 
 func TestThatAddSubscriptionAndIsSavedWorks(t *testing.T) {
-	subsRepo := NewSubscriptionFileRepository()
+	logger := logger.CreateLogger(logger.TxtLoggerType)
+	subsRepo := NewSubscriptionFileRepository(logger)
 	emailString := "plainemail@gmail.com"
 	base := "BTC"
 	quote := "UAH"

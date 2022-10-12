@@ -18,12 +18,15 @@ func NewEmailSenderRepository(storage SubscriptionStorage,
 
 func (r *EmailSenderRepository) SendEmailsToUsers() error {
 	subscriptions := r.storage.GetAll()
+	r.logger.LogDebug("Fetched subscriptions from storage")
 	users := matchSubscriptionsToUsers(subscriptions)
 	for _, user := range users {
-		if err := r.sendEmailToUser(user); err != nil {
+		err := r.sendEmailToUser(user)
+		if err != nil {
 			r.logger.LogError(err)
 			return err
 		}
+		r.logger.LogInfo("Emails sent to " + user.GetEmailAddress().ToString())
 	}
 	return nil
 }
@@ -36,6 +39,7 @@ func (r *EmailSenderRepository) sendEmailToUser(user models.User) error {
 			r.logger.LogError(err)
 			return err
 		}
+		r.logger.LogDebug("Got " + pair.ToString() + " rate")
 		rates = append(rates, rate)
 	}
 	r.sender.SendRatesEmail(rates, *user.GetEmailAddress())
