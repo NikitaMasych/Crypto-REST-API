@@ -32,7 +32,7 @@ services:
       - 8080:8080
     build:
       context: .
-      dockerfile: ./GenesisTask/Dockerfile
+      dockerfile: ./producer/Dockerfile
     environment:
       AMQP_SERVER_URL: amqp://guest:guest@message-broker:5672/
       REDIS_CACHE_HOST: redis-cache:6379
