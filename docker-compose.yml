@@ -2,7 +2,7 @@ version: "0.0.1"
 
 services:
   redis-cache:
-    image: redis:latest
+    image: redis:alpine
     container_name: redis-cache
     ports:
       - 6379:6379
@@ -13,7 +13,7 @@ services:
       - currency-enterprise
   
   message-broker:
-    image: rabbitmq:latest
+    image: rabbitmq:alpine
     container_name: message-broker
     ports:
       - 5672:5672   # for sender and consumer connections
@@ -30,9 +30,7 @@ services:
     container_name: producer
     ports:
       - 8080:8080
-    build:
-      context: .
-      dockerfile: ./producer/Dockerfile
+    build: ./producer
     environment:
       AMQP_SERVER_URL: amqp://guest:guest@message-broker:5672/
       REDIS_CACHE_HOST: redis-cache:6379
@@ -45,9 +43,7 @@ services:
   consumer:
     image: consumer
     container_name: consumer
-    build:
-      context: .
-      dockerfile: ./consumer/Dockerfile
+    build: ./consumer
     environment:
       AMQP_SERVER_URL: amqp://guest:guest@message-broker:5672/
     restart: always
