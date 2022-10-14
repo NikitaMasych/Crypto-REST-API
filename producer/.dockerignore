@@ -2,4 +2,7 @@ subscriptions.txt
 debug_log.txt
 errors_log.txt
 info_log.txt
-/aux
+docs/
+README.md
+.github
+.gitignore

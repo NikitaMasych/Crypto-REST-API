@@ -1,0 +1,58 @@
+version: "0.0.1"
+
+services:
+  redis-cache:
+    image: redis:alpine
+    container_name: redis-cache
+    ports:
+      - 6379:6379
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - ./aux/cache:/data
+    networks:
+      - currency-enterprise
+  
+  message-broker:
+    image: rabbitmq:alpine
+    container_name: message-broker
+    ports:
+      - 5672:5672   # for sender and consumer connections
+      - 15672:15672 # for RabbitMQ GUI
+    volumes:
+      - ./aux/rabbitmq/data/:/var/lib/rabbitmq
+      - ./aux/rabbitmq/log/:/var/log/rabbitmq
+    restart: always
+    networks:
+      - currency-enterprise
+  
+  producer:
+    image: producer
+    container_name: producer
+    ports:
+      - 8080:8080
+    build: ./producer
+    environment:
+      AMQP_SERVER_URL: amqp://guest:guest@message-broker:5672/
+      REDIS_CACHE_HOST: redis-cache:6379
+    restart: always
+    networks:
+      - currency-enterprise
+    depends_on:
+      - message-broker
+
+  consumer:
+    image: consumer
+    container_name: consumer
+    build: ./consumer
+    environment:
+      AMQP_SERVER_URL: amqp://guest:guest@message-broker:5672/
+    restart: always
+    networks:
+      - currency-enterprise
+    depends_on:
+      - producer
+      - message-broker
+
+networks:
+  currency-enterprise:
+    driver: bridge
