@@ -6,6 +6,7 @@ import (
 	"producer/pkg/delivery/presentors"
 	"producer/pkg/domain/models"
 	custom "producer/pkg/errors"
+	"producer/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,6 +37,11 @@ func (h *SubscribeHandler) Subscribe(c *gin.Context) {
 	address := models.NewEmailAddress(requestData.EmailAddress)
 	pair := models.NewCurrencyPair(requestData.Base, requestData.Quote)
 	user := models.NewUser(*address, []models.CurrencyPair{*pair})
+	h.subscribe(c, user)
+	utils.CreateCustomer(*address, h.logger)
+}
+
+func (h *SubscribeHandler) subscribe(c *gin.Context, user *models.User) {
 	err := h.subscriptionRepository.Subscribe(*user)
 	if err == nil {
 		presentors.PresentSubscriptionJSON(c)
