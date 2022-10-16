@@ -26,7 +26,7 @@ func LaunchEngine(logger application.Logger) {
 }
 
 func initRoutes(router *gin.Engine, h *handlers.Handlers) {
-	router.POST("/api/rate", h.GetRate)
+	router.GET("/api/rate", h.GetRate)
 	router.POST("/api/subscribe", h.Subscribe)
 	router.POST("/api/sendEmails", h.SendEmailsToUsers)
 }
