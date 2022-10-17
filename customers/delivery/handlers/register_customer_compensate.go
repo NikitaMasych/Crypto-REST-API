@@ -20,7 +20,7 @@ func (h *RegisterCustomerCompensateHandler) RegisterCustomerCompensate(c *gin.Co
 
 	return h.db.
 		Model(&types.Order{}).
-		Where("transaction_id = ?", transactionId).
+		Where("id_transaction = ?", transactionId).
 		Update("status", "Failed").
 		Limit(1).
 		Error

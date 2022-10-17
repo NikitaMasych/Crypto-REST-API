@@ -9,7 +9,6 @@ import (
 
 var (
 	DtmCoordinatorAddress = os.Getenv("DTM_COORDINATOR")
-	OrdersServerURL       = os.Getenv("ORDERS_SERVICE_URL")
 	CustomersServerURL    = os.Getenv("CUSTOMERS_SERVICE_URL")
 	ServerUrl             string
 )

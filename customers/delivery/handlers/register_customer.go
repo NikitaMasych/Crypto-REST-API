@@ -14,8 +14,7 @@ type RegisterCustomerHandler struct {
 	db *gorm.DB
 }
 
-type RegisterCustomerRequest struct {
-	CustomerId   string `json:"customerId"`
+type registerCustomerRequest struct {
 	EmailAddress string `json:"emailAddress"`
 }
 
@@ -24,7 +23,7 @@ func NewRegisterCustomerHandler(db *gorm.DB) *RegisterCustomerHandler {
 }
 
 func (h *RegisterCustomerHandler) RegisterCustomer(c *gin.Context) interface{} {
-	var customer RegisterCustomerRequest
+	var customer registerCustomerRequest
 	err := c.BindJSON(&customer)
 	if err != nil {
 		return dtmcli.ErrFailure
@@ -32,16 +31,12 @@ func (h *RegisterCustomerHandler) RegisterCustomer(c *gin.Context) interface{} {
 
 	transactionId := c.Query(globalID)
 	if err = h.db.Create(&types.Order{
-		TransactionId: transactionId,
-		CustomerId:    customer.CustomerId,
+		IDTransaction: transactionId,
 		EmailAddress:  customer.EmailAddress,
 		Status:        "Created",
 	}).Error; err != nil {
 		return err
 	}
 
-	err = h.db.Save(&types.Customer{CustomerId: customer.CustomerId,
-		EmailAddress: customer.EmailAddress}).Error
-
-	return err
+	return h.db.Save(&types.Customer{EmailAddress: customer.EmailAddress}).Error
 }

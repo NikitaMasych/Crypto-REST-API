@@ -8,7 +8,8 @@ import (
 )
 
 var (
-	ServerUrl string
+	ServerUrl   string
+	DatabaseUrl string
 )
 
 func init() {
@@ -25,4 +26,5 @@ func loadEnv() {
 
 func setupVariables() {
 	ServerUrl = os.Getenv("SERVER_URL")
+	DatabaseUrl = os.Getenv("MYSQL_DSN")
 }

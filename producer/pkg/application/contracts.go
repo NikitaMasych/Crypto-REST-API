@@ -42,3 +42,7 @@ type loggerError interface {
 type loggerInfo interface {
 	LogInfo(v ...any)
 }
+
+type CustomersService interface {
+	CreateCustomer(models.EmailAddress) error
+}

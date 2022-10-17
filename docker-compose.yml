@@ -2,43 +2,39 @@ version: "3.8"
 
 services:
   customers:
+    image: customers
     container_name: customers
     build: ./customers
     restart: always
     environment:
       - DTM_COORDINATOR=http://dtm:36789/api/dtmsvr
-      - ORDERS_SERVICE_URL=http://orders:8080
-      - CUSTOMERS_SERVICE_URL=http://customers:8080
       - MYSQL_DSN=saga:saga@tcp(mysql:3306)/saga?charset=utf8mb4&parseTime=True&loc=Local
     ports:
       - "8090:8080"
+    depends_on:
+      dtm:
+        condition: service_started
+      mysql:
+        condition: service_healthy
     networks:
       - currency-enterprise
 
   orders: 
+    image: orders
     container_name: orders
     build: ./orders
     restart: always
     environment:
       - DTM_COORDINATOR=http://dtm:36789/api/dtmsvr
-      - ORDERS_SERVICE_URL=http://orders:8080
       - CUSTOMERS_SERVICE_URL=http://customers:8080
-      - MYSQL_DSN=saga:saga@tcp(mysql:3306)/saga?charset=utf8mb4&parseTime=True&loc=Local
     ports:
       - "8091:8080"
+    depends_on:
+      - dtm
+      - customers
     networks:
       - currency-enterprise
-
-  dtm:
-    image: yedf/dtm
-    container_name: dtm
-    restart: always
-    ports:
-      - "36790:36790" # grpc
-      - "36789:36789" # ui
-    networks:
-      - currency-enterprise
-
+  
   mysql:
     image: mysql:latest
     container_name: mysql
@@ -50,6 +46,21 @@ services:
       - MYSQL_DATABASE=saga
       - MYSQL_USER=saga
       - MYSQL_PASSWORD=saga
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ppass"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - currency-enterprise
+
+  dtm:
+    image: yedf/dtm
+    container_name: dtm
+    restart: always
+    ports:
+      - "36790:36790" # grpc
+      - "36789:36789" # ui
     networks:
       - currency-enterprise
 
@@ -75,6 +86,12 @@ services:
     volumes:
       - ./aux/rabbitmq/data/:/var/lib/rabbitmq
       - ./aux/rabbitmq/log/:/var/log/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 2s
     networks:
       - currency-enterprise
   
@@ -92,7 +109,12 @@ services:
     networks:
       - currency-enterprise
     depends_on:
-      - message-broker
+      message-broker:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+      customers:
+        condition: service_started
 
   consumer:
     image: consumer
@@ -104,8 +126,10 @@ services:
     networks:
       - currency-enterprise
     depends_on:
-      - producer
-      - message-broker
+      message-broker:
+        condition: service_healthy
+      producer:
+        condition: service_started
 
 networks:
   currency-enterprise:

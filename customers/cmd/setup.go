@@ -5,7 +5,6 @@ import (
 	"customers/delivery/handlers"
 	"customers/delivery/routes"
 	"customers/storage"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,8 +18,7 @@ func LaunchEngine() {
 }
 
 func createHandlers() *handlers.Handlers {
-	dbURL := os.Getenv("MYSQL_DSN")
-	db := storage.NewMySqlDB(dbURL)
+	db := storage.NewMySqlDB(config.DatabaseUrl)
 
 	h1 := handlers.NewRegisterCustomerHandler(db)
 	h2 := handlers.NewRegisterCustomerCompensateHandler(db)
