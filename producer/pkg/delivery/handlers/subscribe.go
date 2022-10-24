@@ -13,11 +13,12 @@ import (
 type SubscribeHandler struct {
 	subscriptionRepository application.SubscriptionRepository
 	logger                 application.Logger
+	customers              application.CustomersService
 }
 
 func NewSubscribeHandler(r application.SubscriptionRepository,
-	l application.Logger) *SubscribeHandler {
-	return &SubscribeHandler{r, l}
+	l application.Logger, c application.CustomersService) *SubscribeHandler {
+	return &SubscribeHandler{r, l, c}
 }
 
 type subscriptionRequest struct {
@@ -36,6 +37,16 @@ func (h *SubscribeHandler) Subscribe(c *gin.Context) {
 	address := models.NewEmailAddress(requestData.EmailAddress)
 	pair := models.NewCurrencyPair(requestData.Base, requestData.Quote)
 	user := models.NewUser(*address, []models.CurrencyPair{*pair})
+	if err := h.subscribe(c, user); err == nil {
+		if err := h.customers.CreateCustomer(*address); err != nil {
+			h.logger.LogError(err)
+			presentors.PresentErrorJSON(c)
+			h.logger.LogDebug("Presented JSON error")
+		}
+	}
+}
+
+func (h *SubscribeHandler) subscribe(c *gin.Context, user *models.User) error {
 	err := h.subscriptionRepository.Subscribe(*user)
 	if err == nil {
 		presentors.PresentSubscriptionJSON(c)
@@ -50,4 +61,5 @@ func (h *SubscribeHandler) Subscribe(c *gin.Context) {
 			h.logger.LogDebug("Presented JSON error")
 		}
 	}
+	return err
 }

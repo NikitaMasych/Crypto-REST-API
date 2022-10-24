@@ -1,9 +1,73 @@
-version: "0.0.1"
+version: "3.8"
 
 services:
+  customers:
+    image: customers
+    container_name: customers
+    build: ./customers
+    restart: always
+    environment:
+      - DTM_COORDINATOR=http://dtm:36789/api/dtmsvr
+      - MYSQL_DSN=saga:saga@tcp(mysql:3306)/saga?charset=utf8mb4&parseTime=True&loc=Local
+    ports:
+      - "8090:8080"
+    depends_on:
+      dtm:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+    networks:
+      - currency-enterprise
+
+  orders: 
+    image: orders
+    container_name: orders
+    build: ./orders
+    restart: always
+    environment:
+      - DTM_COORDINATOR=http://dtm:36789/api/dtmsvr
+      - CUSTOMERS_SERVICE_URL=http://customers:8080
+    ports:
+      - "8091:8080"
+    depends_on:
+      - dtm
+      - customers
+    networks:
+      - currency-enterprise
+  
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    ports:
+      - "8092:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=saga
+      - MYSQL_USER=saga
+      - MYSQL_PASSWORD=saga
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ppass"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - currency-enterprise
+
+  dtm:
+    image: yedf/dtm
+    container_name: dtm
+    restart: always
+    ports:
+      - "36790:36790" # grpc
+      - "36789:36789" # ui
+    networks:
+      - currency-enterprise
+
   redis-cache:
     image: redis:alpine
     container_name: redis-cache
+    restart: always
     ports:
       - 6379:6379
     command: redis-server --save 20 1 --loglevel warning
@@ -15,43 +79,57 @@ services:
   message-broker:
     image: rabbitmq:alpine
     container_name: message-broker
+    restart: always
     ports:
       - 5672:5672   # for sender and consumer connections
       - 15672:15672 # for RabbitMQ GUI
     volumes:
       - ./aux/rabbitmq/data/:/var/lib/rabbitmq
       - ./aux/rabbitmq/log/:/var/log/rabbitmq
-    restart: always
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 2s
     networks:
       - currency-enterprise
   
   producer:
     image: producer
     container_name: producer
+    restart: always
     ports:
       - 8080:8080
     build: ./producer
     environment:
       AMQP_SERVER_URL: amqp://guest:guest@message-broker:5672/
       REDIS_CACHE_HOST: redis-cache:6379
-    restart: always
+      CUSTOMER_CREATION_URL: http://orders:8080/create-customer
     networks:
       - currency-enterprise
     depends_on:
-      - message-broker
+      message-broker:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+      customers:
+        condition: service_started
 
   consumer:
     image: consumer
     container_name: consumer
+    restart: always
     build: ./consumer
     environment:
       AMQP_SERVER_URL: amqp://guest:guest@message-broker:5672/
-    restart: always
     networks:
       - currency-enterprise
     depends_on:
-      - producer
-      - message-broker
+      message-broker:
+        condition: service_healthy
+      producer:
+        condition: service_started
 
 networks:
   currency-enterprise:

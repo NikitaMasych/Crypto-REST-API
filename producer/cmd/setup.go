@@ -5,6 +5,7 @@ import (
 	"producer/pkg/application"
 	"producer/pkg/delivery/handlers"
 	"producer/pkg/infrastructure/crypto"
+	"producer/pkg/infrastructure/customers"
 	"producer/pkg/infrastructure/email"
 	cache "producer/pkg/infrastructure/storage/cache/redis"
 	storage "producer/pkg/infrastructure/storage/subscription_repository"
@@ -26,7 +27,7 @@ func LaunchEngine(logger application.Logger) {
 }
 
 func initRoutes(router *gin.Engine, h *handlers.Handlers) {
-	router.POST("/api/rate", h.GetRate)
+	router.GET("/api/rate", h.GetRate)
 	router.POST("/api/subscribe", h.Subscribe)
 	router.POST("/api/sendEmails", h.SendEmailsToUsers)
 }
@@ -41,6 +42,8 @@ func createHandlers(logger application.Logger) (h *handlers.Handlers) {
 	logger.LogDebug("Created new redis cache")
 	emailAddressesStorage := storage.NewSubscriptionFileRepository(logger)
 	logger.LogDebug("Created new subscription file repository")
+	customersService := customers.NewCustomersService(config.CustomerCreationURL)
+	logger.LogDebug("Created new customers service")
 
 	r1 := application.NewRateRepository(*providersChain, cache, logger)
 	r2 := application.NewSubscriptionRepository(emailAddressesStorage, logger)
@@ -48,7 +51,7 @@ func createHandlers(logger application.Logger) (h *handlers.Handlers) {
 	logger.LogDebug("Initialized repositories")
 
 	h1 := handlers.NewRateHandler(r1, logger)
-	h2 := handlers.NewSubscribeHandler(*r2, logger)
+	h2 := handlers.NewSubscribeHandler(*r2, logger, customersService)
 	h3 := handlers.NewSendRateEmailsHandler(*r3, logger)
 	logger.LogDebug("Initialized handlers")
 

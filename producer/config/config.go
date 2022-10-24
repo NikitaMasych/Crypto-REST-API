@@ -25,6 +25,7 @@ var (
 	CacheDurationMins     int
 	CurrencyPairSeparator string
 	EmailAddressSeparator string
+	CustomerCreationURL   string
 )
 
 func init() {
@@ -75,4 +76,5 @@ func setupVariables() {
 	}
 	CurrencyPairSeparator = "-"
 	EmailAddressSeparator = ":"
+	CustomerCreationURL = os.Getenv("CUSTOMER_CREATION_URL")
 }
